@@ -127,43 +127,45 @@
 													</span>
 												</div>
 												<div class="form-group m-form__group">
-													<label for="staff">Nhân viên/Staff</label>
-													<div class="m-checkbox-list">
-														@foreach($staffs as $staff)
-														<label class="m-checkbox m-checkbox--check-bold">
-															<input type="checkbox" value="{{$staff->id}}" name="staff[]"> {{$staff->name}}
-															<span></span>
-														</label>
-														@endforeach
+													<div class="row">
+														<div class="col-lg-6">
+															<label for="staff">Chọn nhân viên/Staff</label>
+															<div class="m-checkbox-list">
+																@foreach($staffs as $staff)
+																<label class="m-checkbox m-checkbox--check-bold">
+																	<input type="checkbox" value="{{$staff->id}}" name="staff[]"> {{$staff->name}}
+																	<span></span>
+																</label>
+																@endforeach
+															</div>
+															<span class="m-form__help text-danger">
+																@if ($errors->has('staff'))
+									                                <p class="text-danger">
+									                                    {{ $errors->first('staff') }}
+									                                </p>
+									                            @endif
+															</span>
+														</div>
+														<div class="col-lg-6">
+															<label for="service">Chọn dịch vụ/Service</label>
+															<div class="m-checkbox-list">
+																@foreach($services as $service)
+																<label class="m-checkbox m-checkbox--check-bold">
+																	<input type="checkbox" value="{{$service->id}}" name="service[]"> {{$service->name}}
+																	<span></span>
+																</label>
+																@endforeach
+															</div>
+															<span class="m-form__help text-danger">
+																@if ($errors->has('service'))
+									                                <p class="text-danger">
+									                                    {{ $errors->first('service') }}
+									                                </p>
+									                            @endif
+															</span>
+														</div>
 													</div>
-													<span class="m-form__help text-danger">
-														@if ($errors->has('staff'))
-							                                <p class="text-danger">
-							                                    {{ $errors->first('staff') }}
-							                                </p>
-							                            @endif
-													</span>
 												</div>
-												<div class="form-group m-form__group">
-													<label for="service">Dịch vụ/Service</label>
-													<div class="m-checkbox-list">
-														@foreach($services as $service)
-														<label class="m-checkbox m-checkbox--check-bold">
-															<input type="checkbox" value="{{$service->id}}" name="service[]"> {{$service->name}}
-															<span></span>
-														</label>
-														@endforeach
-													</div>
-													<span class="m-form__help text-danger">
-														@if ($errors->has('service'))
-							                                <p class="text-danger">
-							                                    {{ $errors->first('service') }}
-							                                </p>
-							                            @endif
-													</span>
-												</div>
-											</div>
-											<div class="col-xl-12">
 												<div class="form-group m-form__group">
 													<label for="note">Ghi chú/Note</label>
 													<textarea class="form-control m-input" name="note" id="note" rows="3"></textarea>

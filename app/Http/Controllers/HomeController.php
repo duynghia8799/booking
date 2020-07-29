@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 
 use App\Http\Request\Booking;
+use App\Http\Request\BookingUpdate;
 class HomeController extends Controller
 {
 
@@ -23,6 +24,10 @@ class HomeController extends Controller
 
     public function booking(Booking $request)
     {
+        $data = [
+            'staff_id' => $request->staff,
+            'service_id' => $request->service,
+        ];
         $check_customer = Customer::where('phone', $request->phone)->first();
         if ($check_customer == null) {
             /*
@@ -46,15 +51,11 @@ class HomeController extends Controller
             /*
              *   Insert to table Order detail
              */
-            for ($i = 0; $i < count($request->service); $i++) {
-                $order_detail = [
-                    'order_id'   => $addOrder->id,
-                    'service_id' => $request->service[$i],
-                    'staff_id'   => $request->staff[$i],
-                ];
-                $orderDetail[] = $order_detail;
-            }
-            $addOrderDetail = OrderDetail::insert($orderDetail);
+            $order_detail = [
+                'order_id'   => $addOrder->id,
+                'detail' => serialize($data),
+            ];
+            $addOrderDetail = OrderDetail::insert($order_detail);
         } 
         else {
             /*
@@ -70,15 +71,11 @@ class HomeController extends Controller
             /*
              *   Insert to table Order detail
              */
-            for ($i = 0; $i < count($request->service); $i++) {
-                $order_detail = [
-                    'order_id'   => $addOrder->id,
-                    'service_id' => $request->service[$i],
-                    'staff_id'   => $request->staff[$i],
-                ];
-                $orderDetail[] = $order_detail;
-            }
-            $addOrderDetail = OrderDetail::insert($orderDetail);
+            $order_detail = [
+                'order_id'   => $addOrder->id,
+                'detail' => serialize($data),
+            ];
+            $addOrderDetail = OrderDetail::insert($order_detail);
         }
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back();
@@ -100,14 +97,8 @@ class HomeController extends Controller
                     return redirect()->back();
                 } else {
                     if ($check_cutomer->code === $request->code_history) {
-                        $orders = Order::with('order_details')->where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
-                        foreach ($orders as $order) {
-                            foreach ($order->order_details as $detail) {
-                                $staffs[] = Staff::where('id',$detail->staff_id)->first();
-                                $services[] = Service::where('id',$detail->service_id)->first();
-                            }
-                        }
-                        return view('client.invoice',compact(['staffs','services','orders']));
+                        $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
+                        return view('client.invoice',compact('orders'));
                     } else {
                         $request->session()->flash('error', 'Sai mã code');
                         return redirect()->back();
@@ -120,16 +111,63 @@ class HomeController extends Controller
 
     public function invoice($id)
     {
-        $order = Order::findOrFail($id);
-        $orders = Order::with(['customer','order_details'])->where('id',$id)->get();
-        foreach ($orders as $order) {
-            foreach ($order->order_details as $detail) {
-                $staffs[] = Staff::where('id',$detail->staff_id)->first();
-                $services[] = Service::where('id',$detail->service_id)->first();
+        $check = Order::findOrFail($id);
+        $orders = Order::with(['customer','order_details'])->where('id',$id)->first();
+        foreach ($orders->order_details as $detail) {
+            $data = unserialize($detail->detail);
+            foreach ($data['staff_id'] as $value) {
+                $staffs[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
             }
-            // $staffs = $staff;
+            foreach ($data['service_id'] as $value) {
+                $services[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+            }
         }
-                // dd($services);
         return view('client.detail',compact(['orders','staffs','services']));
+    }
+
+    public function duplidateBook($id)
+    {
+        $check = Order::findOrFail($id);
+        $staffs   = Staff::where('status',config('common.status.active'))->get();
+        $services = Service::where('status',config('common.status.active'))->get();
+        $order = Order::with('order_details')->where('id',$id)->first();
+        foreach ($order->order_details as $detail) {
+            $data = unserialize($detail->detail);
+            foreach ($data['staff_id'] as $value) {
+                $getStaff[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
+            }
+            foreach ($data['service_id'] as $value) {
+                $getService[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+            }
+        }
+        return view('client.update', compact(['staffs', 'services','order','getStaff','getService']));
+    }
+    public function updateBook(BookingUpdate $request,$id)
+    {
+        $order = Order::with('customer')->where('id',$id)->first();
+        $data = [
+            'staff_id' => $request->staff,
+            'service_id' => $request->service,
+        ];
+        /*
+         *   Insert to table Order
+         */
+        $order = [
+            'customer_id'   => $order->customer->id,
+            'number_person' => $request->partner,
+            'note' => $request->note,
+            'start_at'      => $request->start_at,
+        ];
+        $addOrder = Order::create($order);
+        /*
+         *   Insert to table Order detail
+         */
+        $order_detail = [
+            'order_id'   => $addOrder->id,
+            'detail' => serialize($data),
+        ];
+        $addOrderDetail = OrderDetail::insert($order_detail);
+        $request->session()->flash('success', 'Đặt lịch thành công!');
+        return redirect()->back();
     }
 }

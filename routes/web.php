@@ -18,6 +18,8 @@ Route::get('/', 'HomeController@index')->name('homapage');
 Route::post('/booking', 'HomeController@booking')->name('booking');
 Route::post('/history', 'HomeController@history')->name('history');
 Route::get('/invoice/{id}', 'HomeController@invoice')->name('invoice');
+Route::get('/re-booking/{id}', 'HomeController@duplidateBook')->name('re-booking');
+Route::post('/re-update/{id}', 'HomeController@updateBook')->name('re-update');
 
 // Start Route Admin
 Route::get('/admin', 'Admin\HomeController@index')->name('dashboard')->middleware(['auth','checkAdmin']);

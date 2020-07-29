@@ -42,7 +42,7 @@
 	<div id="wrapper">
 		@if (isset($orders))
 			<div class="form-booking">
-				<div class="m-content">
+				<div class="m-content" style="width: 100%;">
 			        <div class="m-portlet m-portlet--mobile">
 			            <div class="m-portlet__head">
 			                <div class="m-portlet__head-caption">
@@ -66,7 +66,7 @@
 			                                Số người đi cùng bạn
 			                            </th>
 			                            <th>
-			                                Thời gian bắt đầu
+			                                Thời gian bắt đầu bạn đã chọn
 			                            </th>
 			                            <th>
 			                                Ghi chú bạn để lại
@@ -80,12 +80,14 @@
 			                            @foreach ($orders as $order)
 			                            <tr>
 			                                <td>
-			                                    <span style="text-transform: uppercase;" class="text-success">
-			                                        {{$order->number_person}}
-			                                    </span>
+			                                    @if ($order->number_person == null)
+                                                    0
+                                                @else
+                                                    {{$order->number_person}}
+                                                @endif
 			                                </td>
 			                                <td>
-			                                    {{$order->start_at}}
+			                                    Ngày {{date('d/m/Y', strtotime($order->start_at))}} vào lúc {{date('H:i:s', strtotime($order->start_at))}}
 			                                </td>
 			                                <td>
 			                                	@if ($order->note == null)
@@ -119,6 +121,14 @@
 			        <!-- END EXAMPLE TABLE PORTLET-->
 			    </div>
 			</div>
+		@else
+		<div class="form-booking">
+			<div class="m-content" style="width: 100%;">
+				<h3 class="m-portlet__head-text">
+	                Không có dữ liệu
+	            </h3>
+	        </div>
+        </div>
 		@endif
 	</div>
 	<script src="{{asset('/template/metronic/assets/vendors/base/vendors.bundle.js')}}" type="text/javascript"></script>

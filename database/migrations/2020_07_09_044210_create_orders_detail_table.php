@@ -16,8 +16,9 @@ class CreateOrdersDetailTable extends Migration
         Schema::create('orders_detail', function (Blueprint $table) {
             $table->id();
             $table->integer('order_id');
-            $table->integer('service_id');
-            $table->integer('staff_id')->nullable();
+            $table->longText('detail');
+            // $table->integer('service_id')->nullable();
+            // $table->integer('staff_id')->nullable();
             $table->timestamps();
         });
     }

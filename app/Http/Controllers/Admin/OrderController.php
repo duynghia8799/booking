@@ -20,13 +20,16 @@ class OrderController extends Controller
     public function detail($id)
     {
     	$order = Order::findOrFail($id);
-    	$orders = Order::with(['customer','order_details'])->where('id',$id)->get();
-    	foreach ($orders as $order) {
-    		foreach ($order->order_details as $detail) {
-    			$staffs[] = Staff::where('id',$detail->staff_id)->first();
-    			$services[] = Service::where('id',$detail->service_id)->first();
-    		}
-    	}
+    	$orders = Order::with(['customer','order_details'])->where('id',$id)->first();
+		foreach ($orders->order_details as $detail) {
+            $data = unserialize($detail->detail);
+            foreach ($data['staff_id'] as $value) {
+    			$staffs[] = Staff::where('id',$value)->first();
+            }
+            foreach ($data['service_id'] as $value) {
+                $services[] = Service::where('id',$value)->first();
+            }
+		}
     	return view('admin.order.detail',compact(['orders','staffs','services']));
     }
 }

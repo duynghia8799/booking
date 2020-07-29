@@ -58,6 +58,9 @@
                                 Số điện thoại
                             </th>
                             <th>
+                                Thời gian hẹn
+                            </th>
+                            <th>
                                 Ghi chú
                             </th>
                             <th>
@@ -75,6 +78,9 @@
                                 </td>
                                 <td>
                                     {{$order->customer->phone}}
+                                </td>
+                                <td>
+                                    Ngày {{date('d/m/Y', strtotime($order->start_at))}} vào lúc {{date('H:i:s', strtotime($order->start_at))}}
                                 </td>
                                 <td>
                                 	@if ($order->note == null)

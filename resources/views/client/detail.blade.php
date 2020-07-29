@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Lịch sử đặt</title>
+	<title>Lịch sử đặt chi tiết</title>
 	<link href="{{asset('/template/metronic/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
 
     <link href="{{asset('/template/metronic/assets/vendors/base/vendors.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -51,31 +51,29 @@
 	                                <div class="m-invoice__container m-invoice__container--centered">
 	                                    <div class="m-invoice__logo" style="padding-top: 3rem;">
 	                                        <a class="text-left">
-	                                            <h1>Lịch hẹn</h1>
+	                                            <h1>Lịch sử đặt lịch chi tiết</h1>
 	                                        </a>
 	                                    </div>
-	                                    @foreach ($orders as $order)
 	                                    <div class="m-invoice__items">
 	                                        <div class="m-invoice__item">
-	                                            <span class="m-invoice__subtitle">TÊN BẠN DÙNG ĐĂNG KÝ</span>
-	                                            <span class="m-invoice__text">{{$order->customer->name}}</span>
+	                                            <span class="m-invoice__subtitle">HỌ VÀ TÊN</span>
+	                                            <span class="m-invoice__text">{{$orders->customer->name}}</span>
 	                                        </div>
 	                                        <div class="m-invoice__item">
-	                                            <span class="m-invoice__subtitle">SỐ ĐIỆN THOẠI BẠN DÙNG ĐĂNG KÝ</span>
-	                                            <span class="m-invoice__text">{{$order->customer->phone}}</span>
+	                                            <span class="m-invoice__subtitle">SỐ ĐIỆN THOẠI</span>
+	                                            <span class="m-invoice__text">{{$orders->customer->phone}}</span>
 	                                        </div>
 	                                        <div class="m-invoice__item">
-	                                            <span class="m-invoice__subtitle">GHI CHÚ BẠN ĐỂ LẠI</span>
+	                                            <span class="m-invoice__subtitle">GHI CHÚ</span>
 	                                            <span class="m-invoice__text">
-	                                                @if ($order->note == null)
+	                                                @if ($orders->note == null)
 	                                                    Không có ghi chú!
 	                                                @else
-	                                                    {{$order->note}}
+	                                                    {{$orders->note}}
 	                                                @endif
 	                                            </span>
 	                                        </div>
 	                                    </div>
-	                                    @endforeach
 	                                </div>
 	                            </div>
 	                            <div class="m-invoice__body m-invoice__body--centered">
@@ -83,7 +81,7 @@
 	                                    <table class="table">
 	                                        <thead>
 	                                            <tr>
-	                                                <th>Thời gian bắt đầu</th>
+	                                                <th>Thời gian hẹn</th>
 	                                                <th>Số người đi cùng</th>
 	                                                <th>Dịch vụ</th>
 	                                                <th>Nhân viên</th>
@@ -91,24 +89,31 @@
 	                                        </thead>
 	                                        <tbody>
 	                                            <tr>
-	                                                @foreach ($orders as $order)
-	                                                    <td>{{$order->start_at}}</td>
-	                                                    <td>{{$order->number_person}}</td>
-	                                                    <td>
-	                                                        @foreach ($services as $key => $service)
-	                                                            {{$service->name}} <br>
-	                                                        @endforeach
-	                                                    </td>
-	                                                    <td>
-	                                                        @foreach ($staffs as $key => $staff)
-	                                                            {{$staff->name}} <br>
-	                                                        @endforeach
-	                                                    </td>
-	                                                @endforeach
+                                                    <td>
+                                                    	Ngày {{date('d/m/Y', strtotime($orders->start_at))}} vào lúc {{date('H:i:s', strtotime($orders->start_at))}}
+                                                    </td>
+                                                    <td>
+														@if ($orders->number_person == null)
+		                                                    0
+		                                                @else
+		                                                    {{$orders->number_person}}
+		                                                @endif
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($services as $key => $service)
+                                                            {{$service->name}} <br>
+                                                        @endforeach
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($staffs as $key => $staff)
+                                                            {{$staff->name}} <br>
+                                                        @endforeach
+                                                    </td>
 	                                            </tr>
 	                                        </tbody>
 	                                    </table>
 	                                </div>
+	                            	<a style="margin-bottom: 3rem;" class="btn btn-primary" href="{{route('re-booking',$orders->id)}}">Đặt lại lịch này</a>
 	                            </div>
 	                        </div>
 	                    </div>
