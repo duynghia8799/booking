@@ -32,9 +32,19 @@
 		}
 		.title {
 			padding: 20px 0;
+			text-align: center;
 		}
 		form {
 			width: 100%;
+		}
+		@media only screen and (max-width: 768px) {
+			#wrapper {
+				width: 90%;
+			}
+			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+				    padding-left: 15px;
+    				padding-right: 15px;
+			}
 		}
 	</style>
 </head>
@@ -116,6 +126,7 @@
 			                    </tbody>
 			                </table>
 			                <!--end: Datatable -->
+                        	<a style="margin-bottom: 3rem;" class="btn btn-secondary" href="{{route('homepage')}}">Quay lại đặt lịch</a>
 			            </div>
 			        </div>
 			        <!-- END EXAMPLE TABLE PORTLET-->

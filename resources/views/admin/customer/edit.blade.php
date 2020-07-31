@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 @section('title-page')
-	Chỉnh sửa thông tin dịch vụ
+	Chỉnh sửa mã code khách hàng
 @endsection
 @section('content-page')
 <!-- begin::Body -->
@@ -20,9 +20,9 @@
                         -
                     </li>
                     <li class="m-nav__item">
-                        <a class="m-nav__link" href="{{route('service.index')}}">
+                        <a class="m-nav__link" href="{{route('customer.index')}}">
                             <span class="m-nav__link-text">
-                                Danh sách dịch vụ
+                                Danh sách khách hàng
                             </span>
                         </a>
                     </li>
@@ -30,9 +30,9 @@
                         -
                     </li>
                     <li class="m-nav__item">
-                        <a class="m-nav__link" href="{{route('service.edit',$service->id)}}">
+                        <a class="m-nav__link" href="{{route('customer.edit',$customer->id)}}">
                             <span class="m-nav__link-text">
-                                Chỉnh sửa thông tin dịch vụ
+                                Chỉnh sửa mã code khách hàng
                             </span>
                         </a>
                     </li>
@@ -53,77 +53,42 @@
                                     </i>
                                 </span>
                                 <h3 class="m-portlet__head-text">
-                                    Chỉnh sửa thông tin dịch vụ
+                                    Chỉnh sửa mã code khách hàng
                                 </h3>
                             </div>
                         </div>
                     </div>
                     <div class="m-portlet m-portlet--tab">
-                        <form action="{{route('service.update',$service->id)}}" class="m-form m-form--fit m-form--label-align-right" method="post">
+                        <form action="{{route('customer.update',$customer->id)}}" class="m-form m-form--fit m-form--label-align-right" method="post">
                             @csrf
                             <div class="m-portlet__body">
-                                <div class="form-group m-form__group m--margin-top-10">
-                                    <div class="alert alert-danger" role="alert">
-                                        Những trường có dấu (*) là những trường bắt buộc
-                                    </div>
-                                </div>
                                 <div class="form-group m-form__group">
-                                    <label for="name">
-                                        Tên dịch vụ
+                                    <label for="code">
+                                        Mã code
                                         <span class="text-danger">
                                             *
                                         </span>
                                     </label>
-                                    <input class="form-control m-input" id="name" name="name" placeholder="Nhập tên trình độ" type="text" value="{{ $service->name }}">
+                                    <input class="form-control m-input" id="code" name="code" placeholder="Chưa có thì nhập mới, nếu muốn hủy thì xóa đi và lưu lại" type="text" value="{{ $customer->code }}">
                                     </input>
-                                    @if ($errors->has('name'))
+                                    @if ($errors->has('code'))
                                         <p class="text-danger">
-                                            {{ $errors->first('name') }}
+                                            {{ $errors->first('code') }}
                                         </p>
                                     @endif
                                 </div>
-                                <div class="form-group m-form__group">
-                                    <label for="description">
-                                        Mô tả ngắn
-                                    </label>
-                                    <textarea class="form-control m-input m-input--air m-input--pill" id="description" name="description" rows="4" value="{{ old('description') }}">{{ $service->description }}</textarea>
-                                    @if ($errors->has('description'))
-                                        <p class="text-danger">
-                                            {{ $errors->first('description') }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="form-group m-form__group">
-                                    <label for="status">
-                                        Trạng thái dịch vụ
-                                    </label>
-                                    <select name="status" id="status" class="form-control m-input">
-                                        @foreach($status as $key => $item)
-                                            <option value="{{$key}}"
-                                                @if ($key === $service->status)
-                                                    selected 
-                                                @endif
-                                            >{{$item}}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('description'))
-                                        <p class="text-danger">
-                                            {{ $errors->first('description') }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <input type="hidden" name="id" value="{{ $service->id }}">
+                                <input type="hidden" name="id" value="{{ $customer->id }}">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="m-portlet__foot m-portlet__foot--fit">
                                             <div class="m-form__actions">
                                                 <button class="btn btn-primary" type="submit">
-                                                    Cập nhật
+                                                    Lưu lại
                                                 </button>
                                                 <button class="btn btn-danger" type="reset">
                                                     Hủy
                                                 </button>
-                                                <a href="{{route('service.index')}}" class="btn btn-danger">Quay lại</a>
+                                                <a href="{{route('customer.index')}}" class="btn btn-danger">Quay lại</a>
                                             </div>
                                         </div>
                                     </div>

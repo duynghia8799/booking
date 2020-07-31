@@ -7,7 +7,7 @@
                     <div class="m-stack m-stack--ver m-stack--general">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
                             <a href="{{route('dashboard')}}" class="m-brand__logo-wrapper">
-                                <img alt="" src="{{asset('/template/metronic/assets/demo/default/media/img/logo/logo_default_dark.png')}}"/>
+                                <img alt="" src="{{ asset(config('common.image.logo')) }}" width="110px;" />
                             </a>
                         </div>
                         <div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -77,8 +77,17 @@
                                                 </form>
                                             </a>
                                         </li>
+
                                     </ul>
                                 </div>
+                            </li>
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel">
+                                <a href="{{route('homepage')}}" class="m-menu__link">
+                                    <i class="m-menu__link-icon flaticon-imac"></i>
+                                    <span class="m-menu__link-text">
+                                        Đặt lịch
+                                    </span>
+                                </a>
                             </li>
                         </ul>
                     </div>

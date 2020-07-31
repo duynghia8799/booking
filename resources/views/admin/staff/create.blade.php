@@ -103,6 +103,7 @@
                                                 <button class="btn btn-danger" type="reset">
                                                     Hủy
                                                 </button>
+                                                <a href="{{route('staff.index')}}" class="btn btn-danger">Quay lại</a>
                                             </div>
                                         </div>
                                     </div>

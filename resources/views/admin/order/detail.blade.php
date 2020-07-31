@@ -125,6 +125,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <a href="{{route('order.index')}}" class="btn btn-secondary">Quay lại</a>
                                 </div>
                             </div>
                             <div class="m-invoice__footer">

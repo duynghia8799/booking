@@ -17,6 +17,14 @@ class OrderController extends Controller
     	return view('admin.order.index',compact('orders'));
     }
 
+    public function update(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->update(['status' => config('common.status.active')]);
+        $request->session()->flash('success', 'Duyệt thành công!');
+        return redirect()->route('order.index');
+    }
+
     public function detail($id)
     {
     	$order = Order::findOrFail($id);

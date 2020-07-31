@@ -64,6 +64,9 @@
                                 Ghi chú
                             </th>
                             <th>
+                                Trạng thái
+                            </th>
+                            <th>
                                 Tùy chọn
                             </th>
                         </tr>
@@ -90,12 +93,24 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if ($order -> status == config('common.status.active'))
+                                        <p class="text-success">Đã xác nhận</p>
+                                    @else
+                                        <p class="text-danger">Chưa xác nhận</p>
+                                    @endif
+                                </td>
+                                <td>
                                     <div class="dropdown">
                                         <span aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton">
                                             <i class="flaticon-folder">
                                             </i>
                                         </span>
                                         <div aria-labelledby="dropdownMenuButton" class="dropdown-menu" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -125px, 0px);" x-placement="top-start">
+                                            <a class="dropdown-item" href="{{route('order.update',$order->id)}}">
+                                                <i class="flaticon-interface-1 text-success">
+                                                </i>
+                                                Xác nhận duyệt
+                                            </a>
                                             <a class="dropdown-item" href="{{route('order.detail',$order->id)}}">
                                                 <i class="la la-edit text-success">
                                                 </i>

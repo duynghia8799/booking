@@ -32,9 +32,19 @@
 		}
 		.title {
 			padding: 20px 0;
+			text-align: center;
 		}
 		form {
 			width: 100%;
+		}
+		@media only screen and (max-width: 768px) {
+			#wrapper {
+				width: 90%;
+			}
+			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+				    padding-left: 15px;
+    				padding-right: 15px;
+			}
 		}
 	</style>
 </head>
@@ -47,7 +57,7 @@
 	                <div class="m-portlet m-portlet--mobile">
 	                    <div class="m-invoice-2">
 	                        <div class="m-invoice__wrapper">
-	                            <div class="m-invoice__head" style="background-image: url(../../assets/app/media/img//logos/bg-6.jpg);">
+	                            <div class="m-invoice__head">
 	                                <div class="m-invoice__container m-invoice__container--centered">
 	                                    <div class="m-invoice__logo" style="padding-top: 3rem;">
 	                                        <a class="text-left">
@@ -114,6 +124,7 @@
 	                                    </table>
 	                                </div>
 	                            	<a style="margin-bottom: 3rem;" class="btn btn-primary" href="{{route('re-booking',$orders->id)}}">Đặt lại lịch này</a>
+	                            	<a style="margin-bottom: 3rem;" class="btn btn-secondary" href="{{route('homepage')}}">Quay lại đặt lịch</a>
 	                            </div>
 	                        </div>
 	                    </div>

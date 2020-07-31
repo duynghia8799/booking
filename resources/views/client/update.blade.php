@@ -32,9 +32,19 @@
 		}
 		.title {
 			padding: 20px 0;
+			text-align: center;
 		}
 		form {
 			width: 100%;
+		}
+		@media only screen and (max-width: 768px) {
+			#wrapper {
+				width: 90%;
+			}
+			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+				    padding-left: 15px;
+    				padding-right: 15px;
+			}
 		}
 	</style>
 </head>
@@ -64,7 +74,7 @@
 									<div class="col-xl-6">
 										<div class="form-group m-form__group">
 											<label for="staff">Khung giờ đến/Time</label>
-											<input type="text" class="form-control" id="m_datetimepicker_1" name="start_at" placeholder="Chọn ngày và thời gian/Select date &amp; time" value="{{$order->start_at}}">
+											<input type="text" class="form-control" id="m_datetimepicker_1" name="start_at" placeholder="Chọn ngày và thời gian/Select date &amp; time">
 											<span class="m-form__help text-danger">
 												@if ($errors->has('start_at'))
 					                                <p class="text-danger">
@@ -155,6 +165,7 @@
 											<div class="m-form__actions">
 												<button type="submit" class="btn btn-primary">Lưu lại</button>
 												<a href="{{route('invoice',$order->id)}}" class="btn btn-secondary">Quay lại</a>
+												<a href="{{route('homepage')}}" class="btn btn-secondary">Quay lại đặt lịch</a>
 											</div>
 										</div>
 									</div>

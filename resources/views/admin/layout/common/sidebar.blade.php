@@ -76,7 +76,7 @@
                 </div>
             </li>
             <li aria-haspopup="true" class="m-menu__item m-menu__item--submenu" m-menu-submenu-toggle="hover">
-                <a class="m-menu__link m-menu__toggle" href="{{route('order.index')}}">
+                <a class="m-menu__link m-menu__toggle" href="javascript:;">
                     <i class="m-menu__link-icon flaticon-calendar">
                     </i>
                     <span class="m-menu__link-text">
@@ -85,6 +85,19 @@
                     <i class="m-menu__ver-arrow la la-angle-right">
                     </i>
                 </a>
+                <div class="m-menu__submenu ">
+                    <ul class="m-menu__subnav">
+                        <li aria-haspopup="true" class="m-menu__item ">
+                            <a class="m-menu__link " href="{{route('order.index')}}">
+                                <i class="m-menu__link-icon la la-list-ol">
+                                </i>
+                                <span class="m-menu__link-text">
+                                    Danh sách
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
             <li aria-haspopup="true" class="m-menu__item m-menu__item--submenu" m-menu-submenu-toggle="hover">
                 <a class="m-menu__link m-menu__toggle" href="javascript:;">

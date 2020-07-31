@@ -13,7 +13,6 @@
 	<style>
 		body {
 			background: url('/images/bg_body.jpg');
-			background-size: cover;
     		background-repeat: no-repeat;
     		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 		}
@@ -32,9 +31,19 @@
 		}
 		.title {
 			padding: 20px 0;
+			text-align: center;
 		}
 		form {
 			width: 100%;
+		}
+		@media only screen and (max-width: 768px) {
+			#wrapper {
+				width: 90%;
+			}
+			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+				    padding-left: 15px;
+    				padding-right: 15px;
+			}
 		}
 	</style>
 </head>

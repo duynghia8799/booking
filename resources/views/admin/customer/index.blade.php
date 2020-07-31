@@ -47,6 +47,25 @@
                 </div>
             </div>
             <div class="m-portlet__body">
+                <!--begin: Search Form -->
+                <div class="m-form m-form--label-align-left m--margin-top-20 m--margin-bottom-30">
+                    <div class="row align-items-center">
+                        <div class="col-xl-4 order-1 order-xl-2 m--align-left">
+                            <a class="btn btn-danger m-btn m-btn--custom m-btn--icon m-btn--air" href="{{route('customer.updateCode')}}">
+                                <span>
+                                    <i class="flaticon-cancel">
+                                    </i>
+                                    <span>
+                                        Hủy mã code khách hàng
+                                    </span>
+                                </span>
+                            </a>
+                            <div class="m-separator m-separator--dashed d-xl-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Search Form -->
                 <!--begin: Datatable -->
                 <table class="table table-striped- table-bordered table-hover table-checkable" id="levels" style="width:100%">
                     <thead>
@@ -59,6 +78,9 @@
                             </th>
                             <th>
                                 Mã Code
+                            </th>
+                            <th>
+                                Tùy chọn
                             </th>
                         </tr>
                     </thead>
@@ -79,6 +101,21 @@
                                 	@else
 										<p class="text-danger">Chưa có mã code</p>
                                 	@endif
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <span aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton">
+                                            <i class="flaticon-folder">
+                                            </i>
+                                        </span>
+                                        <div aria-labelledby="dropdownMenuButton" class="dropdown-menu" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -125px, 0px);" x-placement="top-start">
+                                            <a class="dropdown-item" href="{{route('customer.edit',$customer->id)}}">
+                                                <i class="la la-edit text-success">
+                                                </i>
+                                                Tạo/Hủy mã code
+                                            </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach

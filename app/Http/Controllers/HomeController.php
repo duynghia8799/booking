@@ -77,8 +77,26 @@ class HomeController extends Controller
             ];
             $addOrderDetail = OrderDetail::insert($order_detail);
         }
+        /*
+         *   Send email
+         */
+        foreach ($request->staff as $value) {
+            $staffs[] = Staff::where('id',$value)->first();
+        }
+        foreach ($request->service as $value) {
+            $services[] = Service::where('id',$value)->first();
+        }
+        $dataSendMail = [
+            'fullname' => $request->fullname,
+            'phone'    => $request->phone,
+            'start_at' => $request->start_at,
+            'staff'    => $staffs,
+            'service'  => $services,
+            'note'     => $request->note,
+        ];
+        \Mail::to('nghiamd@1office.vn')->send(new \App\Mail\SendMail($dataSendMail));
         $request->session()->flash('success', 'Đặt lịch thành công!');
-        return redirect()->back();
+        return redirect()->back()->with('<script>window.close();</script>');
     }
 
     public function history(Request $request)
@@ -92,18 +110,25 @@ class HomeController extends Controller
                 $request->session()->flash('error', 'Không tồn tại thông tin');
                 return redirect()->back();
             } else {
-                if($check_cutomer->code == null) {
-                    $request->session()->flash('error', 'Quý khách chưa có mã code. Vui lòng liên hệ với chúng tôi để lấy mã code');
-                    return redirect()->back();
+                if ($check_cutomer->code === $request->code_history) {
+                    $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
+                    return view('client.invoice',compact('orders'));
                 } else {
-                    if ($check_cutomer->code === $request->code_history) {
-                        $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
-                        return view('client.invoice',compact('orders'));
-                    } else {
-                        $request->session()->flash('error', 'Sai mã code');
-                        return redirect()->back();
-                    }
+                    $request->session()->flash('error', 'Sai mã code');
+                    return redirect()->back();
                 }
+                // if($check_cutomer->code == null) {
+                //     $request->session()->flash('error', 'Quý khách chưa có mã code. Vui lòng liên hệ với chúng tôi để lấy mã code');
+                //     return redirect()->back();
+                // } else {
+                //     if ($check_cutomer->code === $request->code_history) {
+                //         $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
+                //         return view('client.invoice',compact('orders'));
+                //     } else {
+                //         $request->session()->flash('error', 'Sai mã code');
+                //         return redirect()->back();
+                //     }
+                // }
             }
         }
 
@@ -149,6 +174,21 @@ class HomeController extends Controller
             'staff_id' => $request->staff,
             'service_id' => $request->service,
         ];
+        foreach ($request->staff as $value) {
+            $staffs[] = Staff::where('id',$value)->first();
+        }
+        foreach ($request->service as $value) {
+            $services[] = Service::where('id',$value)->first();
+        }
+        $dataSendMail = [
+            'fullname' => $order->customer->name,
+            'phone'    => $order->customer->phone,
+            'start_at' => $request->start_at,
+            'staff'    => $staffs,
+            'service'  => $services,
+            'note'     => $request->note,
+        ];
+        \Mail::to('nghiamd@1office.vn')->send(new \App\Mail\SendMail($dataSendMail));
         /*
          *   Insert to table Order
          */
@@ -167,6 +207,7 @@ class HomeController extends Controller
             'detail' => serialize($data),
         ];
         $addOrderDetail = OrderDetail::insert($order_detail);
+        
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back();
     }
