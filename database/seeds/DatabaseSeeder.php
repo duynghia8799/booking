@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
 	        UserSeeder::class,
 	        StaffSeeder::class,
             ServiceSeeder::class,
+            SettingSeeder::class
 	    ]);
     }
 }

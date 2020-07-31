@@ -7,6 +7,7 @@ use App\Model\Order;
 use App\Model\Service;
 use App\Model\Staff;
 use App\Model\OrderDetail;
+use App\Model\Setting;
 use Illuminate\Http\Request;
 
 
@@ -22,12 +23,18 @@ class HomeController extends Controller
         return view('client.index', compact(['staffs', 'services']));
     }
 
+    public function redirect()
+    {
+       return view('client.redirect');
+    }
+
     public function booking(Booking $request)
     {
         $data = [
             'staff_id' => $request->staff,
             'service_id' => $request->service,
         ];
+        $setting = Setting::all()->first();
         $check_customer = Customer::where('phone', $request->phone)->first();
         if ($check_customer == null) {
             /*
@@ -94,7 +101,7 @@ class HomeController extends Controller
             'service'  => $services,
             'note'     => $request->note,
         ];
-        \Mail::to('nghiamd@1office.vn')->send(new \App\Mail\SendMail($dataSendMail));
+        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back()->with('<script>window.close();</script>');
     }
@@ -117,18 +124,6 @@ class HomeController extends Controller
                     $request->session()->flash('error', 'Sai mã code');
                     return redirect()->back();
                 }
-                // if($check_cutomer->code == null) {
-                //     $request->session()->flash('error', 'Quý khách chưa có mã code. Vui lòng liên hệ với chúng tôi để lấy mã code');
-                //     return redirect()->back();
-                // } else {
-                //     if ($check_cutomer->code === $request->code_history) {
-                //         $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
-                //         return view('client.invoice',compact('orders'));
-                //     } else {
-                //         $request->session()->flash('error', 'Sai mã code');
-                //         return redirect()->back();
-                //     }
-                // }
             }
         }
 
@@ -174,6 +169,7 @@ class HomeController extends Controller
             'staff_id' => $request->staff,
             'service_id' => $request->service,
         ];
+        $setting = Setting::all()->first();
         foreach ($request->staff as $value) {
             $staffs[] = Staff::where('id',$value)->first();
         }
@@ -188,7 +184,7 @@ class HomeController extends Controller
             'service'  => $services,
             'note'     => $request->note,
         ];
-        \Mail::to('nghiamd@1office.vn')->send(new \App\Mail\SendMail($dataSendMail));
+        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         /*
          *   Insert to table Order
          */

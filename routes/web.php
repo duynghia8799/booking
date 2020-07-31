@@ -12,28 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('send-mail', function () {
-   
-//     $data = [
-//         'fullname' => 'Tên khách hàng',
-//         'phone' => 'Số điện thoại khách hàng',
-//         'start_at' => '00 giờ',
-//         'staff' => [
-//         	'0' => 'NV 1',
-//         	'1' => 'NV 2',
-//         ],
-//         'service' => [
-//         	'0' => 'DV 1',
-//         	'1' => 'DV 2',
-//         ],
-//         'note' => 'Ghi chú',
-//     ];
-//     \Mail::to('maiduynghia87@gmail.com')->send(new \App\Mail\SendMail($data));
-   
-//     dd("Email is Sent.");
-// });
 // Start Route Client
 Route::get('/', 'HomeController@index')->name('homepage');
+Route::get('/redirect', 'HomeController@redirect')->name('redirect');
 Route::post('/booking', 'HomeController@booking')->name('booking');
 Route::post('/history', 'HomeController@history')->name('history');
 Route::get('/invoice/{id}', 'HomeController@invoice')->name('invoice');
@@ -41,6 +22,7 @@ Route::get('/re-booking/{id}', 'HomeController@duplidateBook')->name('re-booking
 Route::post('/re-update/{id}', 'HomeController@updateBook')->name('re-update');
 
 // Start Route Admin
+Route::get('/admin', 'Admin\HomeController@index')->name('dashboard')->middleware(['auth','checkAdmin']);
 Route::get('/admin', 'Admin\HomeController@index')->name('dashboard')->middleware(['auth','checkAdmin']);
 // Employees
 Route::prefix('/admin/staff')->middleware(['auth','checkAdmin'])->group(function() {
@@ -95,6 +77,13 @@ Route::prefix('/admin/customer')->middleware(['auth','checkAdmin'])->group(funct
 	Route::post('/update/{id}', $controller . 'update')->name('customer.update');
 	// Update all code
 	Route::get('/update-code', $controller . 'updateCode')->name('customer.updateCode');
+});
+// Settings
+Route::prefix('/admin/setting')->middleware(['auth','checkAdmin'])->group(function() {
+	$controller = 'Admin\ConfigController@';
+	// List staff
+	Route::get('/', $controller . 'index')->name('setting');
+	Route::post('/store', $controller . 'store')->name('setting.store');
 });
 // Route For Authentication
 Auth::routes(['register' => false]);

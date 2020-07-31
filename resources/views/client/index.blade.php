@@ -267,6 +267,10 @@
 	<script>
     @if(session('success'))
         swal('{{ session('success') }}', '', 'success');
+        var btn=document.getElementsByClassName('swal2-confirm')[0];
+        btn.addEventListener('click',function(){
+            window.close('','_self');
+        });
     @endif
     @if(session('error'))
     swal('{{ session('error') }}', '', 'error');
