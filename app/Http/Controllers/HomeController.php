@@ -87,8 +87,12 @@ class HomeController extends Controller
         /*
          *   Send email
          */
-        foreach ($request->staff as $value) {
-            $staffs[] = Staff::where('id',$value)->first();
+        if ($request->staff) {
+            foreach ($request->staff as $value) {
+                $staffs[] = Staff::where('id',$value)->first();
+            }
+        } else {
+            $staffs = '';
         }
         foreach ($request->service as $value) {
             $services[] = Service::where('id',$value)->first();
@@ -170,6 +174,13 @@ class HomeController extends Controller
             'service_id' => $request->service,
         ];
         $setting = Setting::all()->first();
+        if ($request->staff) {
+            foreach ($request->staff as $value) {
+                $staffs[] = Staff::where('id',$value)->first();
+            }
+        } else {
+            $staffs = '';
+        }
         foreach ($request->staff as $value) {
             $staffs[] = Staff::where('id',$value)->first();
         }

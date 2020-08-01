@@ -64,9 +64,11 @@
                     </td>
                     <td>
                     	<b>
-	                        @foreach ($dataSendMail['staff'] as $staff)
-								{{$staff->name}} <br>
-	                        @endforeach
+                            @if($dataSendMail['staff'] != '')
+    	                        @foreach ($dataSendMail['staff'] as $staff)
+    								{{$staff->name}} <br>
+    	                        @endforeach
+                            @endif
                         </b>
                     </td>
                 </tr>

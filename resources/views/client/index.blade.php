@@ -32,17 +32,35 @@
 		.title {
 			padding: 20px 0;
 			text-align: center;
+			text-transform: uppercase;
 		}
 		form {
 			width: 100%;
+		}
+		#wrapper .form-booking form .m-checkbox-list .m-checkbox {
+			display: inline-block;
+			padding-right: 20px;
+		}
+		#wrapper .form-booking form .m-checkbox-list .m-checkbox:last-child {
+			padding-right: 0;
+		}
+		.m-form .m-form__group {
+			padding-bottom: 0;
+		    padding-top: 0;
+		}
+		.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.m-form .m-form__actions {
+			padding: 30px 0;
 		}
 		@media only screen and (max-width: 768px) {
 			#wrapper {
 				width: 90%;
 			}
-			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
-				    padding-left: 15px;
-    				padding-right: 15px;
+			.m-portlet .m-portlet__body {
+				padding: 0;
 			}
 		}
 	</style>
@@ -72,8 +90,8 @@
 						<div class="form-booking">
 							<div class="logo">
 								<a href="https://massagetamsen.vn/"><img src="{{ asset(config('common.image.logo')) }}" alt="Logo" height="100" /></a>
-							</div> 
-							<div class="title">
+							</div>  
+							<div class="title m--padding-10">
 								<h2>
 									Đặt lịch sử dụng dịch vụ của Tâm Sen
 								</h2>
@@ -81,7 +99,7 @@
 							<form class="m-form m-form--fit m-form--label-align-right" action="{{route('booking')}}" method="post" id="form-booking">
 								@csrf
 								<div class="m-portlet__body">
-									<div class="form-group m-form__group m--margin-top-10">
+									<div class="form-group m-form__group m--margin-top-10 m--padding-10">
 										<div class="alert m-alert m-alert--default" role="alert">
 											Vui lòng điền đầy đủ các thông tin dưới đây. Chúng tôi sẽ liên lạc lại trong 24h làm việc.
 										</div>
@@ -90,7 +108,7 @@
 										<div class="row">
 											<div class="col-xl-6">
 												<div class="form-group m-form__group">
-													<label for="fullname">Số điện thoại/Phone</label>
+													<label for="fullname">Số điện thoại/Phone (<span class="text-danger">*</span>) </label>
 													<input type="text" class="form-control m-input" id="phone" name="phone" placeholder="Số điện thoại/Phone">
 													<span class="m-form__help text-danger">
 														@if ($errors->has('phone'))
@@ -100,30 +118,6 @@
 							                            @endif
 													</span>
 												</div>
-												<div class="form-group m-form__group">
-													<label for="fullname">Họ và tên/Full name</label>
-													<input type="text" class="form-control m-input" id="fullname" name="fullname" placeholder="Họ và tên/Full name">
-													<span class="m-form__help text-danger">
-														@if ($errors->has('fullname'))
-							                                <p class="text-danger">
-							                                    {{ $errors->first('fullname') }}
-							                                </p>
-							                            @endif
-													</span>
-												</div>
-												<div class="form-group m-form__group">
-													<label for="staff">Khung giờ đến/Time</label>
-													<input type="text" class="form-control" id="m_datetimepicker_1" name="start_at" placeholder="Chọn ngày và thời gian/Select date &amp; time">
-													<span class="m-form__help text-danger">
-														@if ($errors->has('start_at'))
-							                                <p class="text-danger">
-							                                    {{ $errors->first('start_at') }}
-							                                </p>
-							                            @endif
-													</span>
-												</div>
-											</div>
-											<div class="col-xl-6">
 												<div class="form-group m-form__group">
 													<label for="fullname">Số người đi cùng/Number partner</label>
 													<input type="text" class="form-control m-input" id="partner" name="partner" placeholder="Số người đi cùng/Number partner">
@@ -135,45 +129,68 @@
 							                            @endif
 													</span>
 												</div>
+												
+											</div>
+											<div class="col-xl-6">
 												<div class="form-group m-form__group">
-													<div class="row">
-														<div class="col-lg-6">
-															<label for="staff">Chọn nhân viên/Staff</label>
-															<div class="m-checkbox-list">
-																@foreach($staffs as $staff)
-																<label class="m-checkbox m-checkbox--check-bold">
-																	<input type="checkbox" value="{{$staff->id}}" name="staff[]"> {{$staff->name}}
-																	<span></span>
-																</label>
-																@endforeach
-															</div>
-															<span class="m-form__help text-danger">
-																@if ($errors->has('staff'))
-									                                <p class="text-danger">
-									                                    {{ $errors->first('staff') }}
-									                                </p>
-									                            @endif
-															</span>
-														</div>
-														<div class="col-lg-6">
-															<label for="service">Chọn dịch vụ/Service</label>
-															<div class="m-checkbox-list">
-																@foreach($services as $service)
-																<label class="m-checkbox m-checkbox--check-bold">
-																	<input type="checkbox" value="{{$service->id}}" name="service[]"> {{$service->name}}
-																	<span></span>
-																</label>
-																@endforeach
-															</div>
-															<span class="m-form__help text-danger">
-																@if ($errors->has('service'))
-									                                <p class="text-danger">
-									                                    {{ $errors->first('service') }}
-									                                </p>
-									                            @endif
-															</span>
-														</div>
+													<label for="fullname">Họ và tên/Full name (<span class="text-danger">*</span>) </label>
+													<input type="text" class="form-control m-input" id="fullname" name="fullname" placeholder="Họ và tên/Full name">
+													<span class="m-form__help text-danger">
+														@if ($errors->has('fullname'))
+							                                <p class="text-danger">
+							                                    {{ $errors->first('fullname') }}
+							                                </p>
+							                            @endif
+													</span>
+												</div>
+												<div class="form-group m-form__group">
+													<label for="staff">Khung giờ đến/Time (<span class="text-danger">*</span>) </label>
+													<input type="text" class="form-control" id="m_datetimepicker_1" name="start_at" placeholder="Chọn ngày và thời gian/Select date &amp; time" autocomplete="off">
+													<span class="m-form__help text-danger">
+														@if ($errors->has('start_at'))
+							                                <p class="text-danger">
+							                                    {{ $errors->first('start_at') }}
+							                                </p>
+							                            @endif
+													</span>
+												</div>
+											</div>
+											<div class="col-xl-12">
+												<div class="form-group m-form__group">
+													<label for="staff">Kỹ thuật viên/Staff</label>
+													<div class="m-checkbox-list">
+														@foreach($staffs as $staff)
+														<label class="m-checkbox m-checkbox--check-bold">
+															<input type="checkbox" value="{{$staff->id}}" name="staff[]"> {{$staff->name}}
+															<span></span>
+														</label>
+														@endforeach
 													</div>
+													<span class="m-form__help text-danger">
+														@if ($errors->has('staff'))
+							                                <p class="text-danger">
+							                                    {{ $errors->first('staff') }}
+							                                </p>
+							                            @endif
+													</span>
+												</div>
+												<div class="form-group m-form__group">
+													<label for="service">Liệu trình/Service (<span class="text-danger">*</span>) </label>
+													<div class="m-checkbox-list">
+														@foreach($services as $service)
+														<label class="m-checkbox m-checkbox--check-bold">
+															<input type="checkbox" value="{{$service->id}}" name="service[]"> {{$service->name}}
+															<span></span>
+														</label>
+														@endforeach
+													</div>
+													<span class="m-form__help text-danger">
+														@if ($errors->has('service'))
+							                                <p class="text-danger">
+							                                    {{ $errors->first('service') }}
+							                                </p>
+							                            @endif
+													</span>
 												</div>
 												<div class="form-group m-form__group">
 													<label for="note">Ghi chú/Note</label>
@@ -190,8 +207,14 @@
 											<div class="col-xl-12">
 												<div class="m-portlet__foot m-portlet__foot--fit">
 													<div class="m-form__actions">
-														<button type="submit" class="btn btn-primary">Đặt lịch</button>
-														<button type="reset" class="btn btn-secondary">Cancel</button>
+														<div class="row">
+															<div class="col-6 d-flex justify-content-start">
+																<button type="submit" class="btn btn-primary">Đặt lịch</button>
+															</div>
+															<div class="col-6 d-flex justify-content-end">
+																<button type="reset" class="btn btn-secondary">Cancel</button>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -206,7 +229,7 @@
 							<div class="logo">
 								<a href="https://massagetamsen.vn/"><img src="{{ asset(config('common.image.logo')) }}" alt="Logo" height="100" /></a>
 							</div>
-							<div class="title">
+							<div class="title m--padding-10">
 								<h2>
 									Xem lịch sử của bạn
 								</h2>
@@ -214,7 +237,7 @@
 							<form class="m-form m-form--fit m-form--label-align-right" action="{{route('history')}}" method="post" id="form-history">
 								@csrf
 								<div class="m-portlet__body">
-									<div class="form-group m-form__group m--margin-top-10">
+									<div class="form-group m-form__group m--margin-top-10 m--padding-10">
 										<div class="alert m-alert m-alert--default" role="alert">
 											Vui lòng điền đầy đủ các thông tin dưới đây để xem lịch sử
 										</div>
@@ -246,8 +269,14 @@
 												</div>
 												<div class="m-portlet__foot m-portlet__foot--fit">
 													<div class="m-form__actions">
-														<button type="submit" class="btn btn-primary">Tra cứu</button>
-														<button type="reset" class="btn btn-secondary">Cancel</button>
+														<div class="row">
+															<div class="col-6 d-flex justify-content-start">
+																<button type="submit" class="btn btn-primary">Tra cứu</button>
+															</div>
+															<div class="col-6 d-flex justify-content-end">
+																<button type="reset" class="btn btn-secondary">Cancel</button>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>

@@ -13,7 +13,6 @@
 	<style>
 		body {
 			background: url('/images/bg_body.jpg');
-			background-size: cover;
     		background-repeat: no-repeat;
     		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 		}
@@ -33,17 +32,35 @@
 		.title {
 			padding: 20px 0;
 			text-align: center;
+			text-transform: uppercase;
 		}
 		form {
 			width: 100%;
+		}
+		#wrapper .form-booking form .m-checkbox-list .m-checkbox {
+			display: inline-block;
+			padding-right: 20px;
+		}
+		#wrapper .form-booking form .m-checkbox-list .m-checkbox:last-child {
+			padding-right: 0;
+		}
+		.m-form .m-form__group {
+			padding-bottom: 0;
+		    padding-top: 0;
+		}
+		.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.m-form .m-form__actions {
+			padding: 30px 0;
 		}
 		@media only screen and (max-width: 768px) {
 			#wrapper {
 				width: 90%;
 			}
-			.m-form.m-form--fit .m-form__content, .m-form.m-form--fit .m-form__group, .m-form.m-form--fit .m-form__heading {
-				    padding-left: 15px;
-    				padding-right: 15px;
+			.m-portlet .m-portlet__body {
+				padding: 0;
 			}
 		}
 	</style>
