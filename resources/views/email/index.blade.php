@@ -68,6 +68,8 @@
     	                        @foreach ($dataSendMail['staff'] as $staff)
     								{{$staff->name}} <br>
     	                        @endforeach
+                            @else
+                                Chưa chọn
                             @endif
                         </b>
                     </td>

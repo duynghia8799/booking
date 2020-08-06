@@ -118,9 +118,13 @@
                                                     @endforeach
                                                 </td>
                                                 <td>
-                                                    @foreach ($staffs as $key => $staff)
-                                                        {{$staff->name}} <br>
-                                                    @endforeach
+                                                    @if($staffs != '')
+                                                        @foreach ($staffs as $key => $staff)
+                                                            {{$staff->name}} <br>
+                                                        @endforeach
+                                                    @else 
+                                                        Chưa chọn
+                                                    @endif
                                                 </td>
                                             </tr>
                                         </tbody>

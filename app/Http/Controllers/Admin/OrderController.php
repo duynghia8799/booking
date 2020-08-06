@@ -13,7 +13,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-    	$orders = Order::with('customer')->get();
+    	$orders = Order::with('customer')->orderBy('id','desc')->get();
     	return view('admin.order.index',compact('orders'));
     }
 
@@ -31,8 +31,12 @@ class OrderController extends Controller
     	$orders = Order::with(['customer','order_details'])->where('id',$id)->first();
 		foreach ($orders->order_details as $detail) {
             $data = unserialize($detail->detail);
-            foreach ($data['staff_id'] as $value) {
-    			$staffs[] = Staff::where('id',$value)->first();
+            if ($data['staff_id']) {
+                foreach ($data['staff_id'] as $value) {
+                    $staffs[] = Staff::where('id',$value)->first();
+                }
+            } else {
+                $staffs = '';
             }
             foreach ($data['service_id'] as $value) {
                 $services[] = Service::where('id',$value)->first();
