@@ -51,6 +51,27 @@
                 <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                     <div class="row align-items-center">
                         <div class="col-xl-8 order-2 order-xl-1">
+                            <div class="form-group m-form__group row align-items-center">
+                                <div class="col-md-4">
+                                    <div class="form-group m-form__group">
+                                        <label for="searchByStatus">
+                                            Trạng thái:
+                                        </label>
+                                        <select class="form-control m-input m-input--solid" name="searchByStatus" id="searchByStatus">
+                                            <option value="">
+                                                All
+                                            </option>
+                                            @foreach ($status as $key => $value)
+                                            <option value="{{$key}}">
+                                                {{$value}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-md-none m--margin-bottom-10">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
                             <a class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air" href="{{route('service.create')}}">
@@ -69,7 +90,7 @@
                 </div>
                 <!--end: Search Form -->
                 <!--begin: Datatable -->
-                <table class="table table-striped- table-bordered table-hover table-checkable" id="levels" style="width:100%">
+                <table class="table table-striped- table-bordered table-hover table-checkable" id="services" style="width:100%">
                     <thead>
                         <tr>
                             <th>
@@ -86,47 +107,6 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                            @foreach ($services as $service)
-                            <tr>
-                                <td>
-                                    <span style="text-transform: uppercase;">
-                                        {{$service -> name}}
-                                    </span>
-                                </td>
-                                <td>
-                                    {{$service -> description}}
-                                </td>
-                                <td>
-                                	@if ($service -> status == config('common.status.active'))
-										<p class="text-success">Đang hoạt động</p>
-                                	@else
-										<p class="text-danger">Đã tạm dừng</p>
-                                	@endif
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <span aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton">
-                                            <i class="flaticon-folder">
-                                            </i>
-                                        </span>
-                                        <div aria-labelledby="dropdownMenuButton" class="dropdown-menu" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -125px, 0px);" x-placement="top-start">
-                                            <a class="dropdown-item" href="{{route('service.edit',$service->id)}}">
-                                                <i class="la la-edit text-success">
-                                                </i>
-                                                Chỉnh sửa thông tin
-                                            </a>
-                                            <a class="btn-remove dropdown-item" href="javascript:;" linkurl="{{route('service.destroy',$service->id)}}">
-                                                <i class="la la-trash text-danger">
-                                                </i>
-                                                Xóa
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                    </tbody>
                 </table>
                 <!--end: Datatable -->
             </div>
@@ -138,21 +118,66 @@
 @endsection
 @section('script')
 <script>
-    $('.btn-remove').on('click', function(){
-        var removeUrl = $(this).attr('linkurl');
-        swal({
-            title: 'Bạn có chắc chắn muốn xóa dịch vụ này không?',
-            text: "Sau khi xóa, bạn sẽ không thể khôi phục lại dữ liệu!",
-            type: 'warning',
-            showCancelButton: !0,
-            cancelButtonColor: '#dc3545',
-            confirmButtonText: 'Đồng ý',
-            cancelButtonText: 'Hủy',
-            dangerMode: true
-        }).then((result) => {
-            if (result.value) {
-                window.location.href = removeUrl;
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(document).ready(function(){
+        var dataTable = $('#services').DataTable({
+            processing: true,
+            serverSide: true,
+            language: {
+                processing: "<div id='loader'><h4>ĐANG TẢI...</h4></div>"
+            },
+            
+            ajax: {
+                url:'{{route('service.datatables')}}',
+                type: 'GET',
+                data: function (e) {
+                    e.searchByStatus = $('#searchByStatus').val();
+                    console.log(e.searchByStatus);
+                }
+            },
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'description', name: 'description' },
+                { data: 'status', name: 'status' },
+                { data: 'action', name: 'action' }
+            ],
+            drawCallback: function( settings ) {
+                $('#services tbody #deleteService').on('click', function () {
+                    var removeUrl = $(this).attr('linkurl');
+                    swal({
+                        title: 'Bạn có chắc chắn muốn xóa dịch vụ này không?',
+                        text: "Sau khi xóa bạn sẽ không thể khôi phục lại dữ liệu",
+                        type: 'warning',
+                        showCancelButton: !0,
+                        cancelButtonColor: '#dc3545',
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy',
+                        dangerMode: true
+                    }).then((willDelete) => {
+                        if (willDelete.value) {
+                            $.ajax({
+                                url: removeUrl,
+                                type: "POST",
+                                dataType: "JSON",
+                                success: function(resp){
+                                    console.log('resp');
+                                    setTimeout(function() {
+                                        $('#services').DataTable().ajax.reload();
+                                        swal('Xóa thành công!','','success');
+                                    },2000);
+                                }
+                            })
+                        }
+                    });
+                });
             }
+        });
+        $('#searchByStatus').change(function(){
+            dataTable.draw(true);
         });
     });
 </script>

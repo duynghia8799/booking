@@ -100,9 +100,6 @@
                                                 <button class="btn btn-primary" type="submit">
                                                     Thêm
                                                 </button>
-                                                <button class="btn btn-danger" type="reset">
-                                                    Hủy
-                                                </button>
                                                 <a href="{{route('service.index')}}" class="btn btn-danger">Quay lại</a>
                                             </div>
                                         </div>
