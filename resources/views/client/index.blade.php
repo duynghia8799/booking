@@ -364,18 +364,16 @@
 							</div>
 							<div class="treatments text-center">
 								<div class="d-flex">
-									<div class="treatment flex-fill">
-										<span>THÊM 30 PHÚT MASSAGE</span>
-										<small class="text-muted">150.000đ</small>
+									@foreach ($extraservices as $extraservice)
+									<div class="treatment flex-fill" data-id="{{$extraservice->id}}">
+										<span>{{$extraservice->name}}</span>
+										<small>{{$extraservice->description}}</small>
 									</div>
-									<div class="treatment flex-fill">
-										<span>CHƯỜM ĐÁ NÓNG</span>
-										<small class="text-muted">15 phút / 50.000đ</small>
-									</div>
-									<div class="treatment flex-fill">
-										<span>XÔNG CHÂN THẢO DƯỢC</span>
-										<small class="text-muted">15 phút / 50.000đ</small>
-									</div>
+									@if (($loop->index+1)%3==0)
+								</div>
+								<div class="d-flex">
+									@endif
+									@endforeach
 								</div>
 							</div>
 						</div>

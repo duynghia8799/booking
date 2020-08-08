@@ -21,8 +21,9 @@ class HomeController extends Controller
     public function index()
     {
         $staffs   = Staff::where('status', config('common.status.active'))->get();
-        $services = Service::where('status', config('common.status.active'))->get();
-        return view('client.index', compact(['staffs', 'services']));
+        $services = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
+        $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 0)->orderBy('priority')->get();
+        return view('client.index', compact(['staffs', 'services', 'extraservices']));
     }
 
     public function redirect()
@@ -39,7 +40,6 @@ class HomeController extends Controller
             'staff_id' => $request->staff,
             'service_id' => $request->service,
         ];
-        dd($data);
         $setting = Setting::all()->first();
         $check_customer = Customer::where('phone', $request->phone)->first();
         if ($check_customer == null) {
@@ -128,10 +128,10 @@ class HomeController extends Controller
             } else {
                 if ($check_cutomer->code === $request->code_history) {
 
-                    $cookie = Cookie::queue('customer' , $request->phone_history, 60);
+                    $cookie = Cookie::queue('customer', $request->phone_history, 60);
 
-                    $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
-                    return view('client.invoice',compact('orders'));
+                    $orders = Order::where('customer_id', $check_cutomer->id)->limit(5)->orderBy('created_at', 'desc')->get();
+                    return view('client.invoice', compact('orders'));
                 } else {
                     $request->session()->flash('error', 'Sai mã code');
                     return redirect()->back();
@@ -144,21 +144,21 @@ class HomeController extends Controller
     {
         if ($request->cookie('customer')) {
             $check = Order::findOrFail($id);
-            $orders = Order::with(['customer','order_details'])->where('id',$id)->first();
+            $orders = Order::with(['customer', 'order_details'])->where('id', $id)->first();
             foreach ($orders->order_details as $detail) {
                 $data = unserialize($detail->detail);
                 if ($data['staff_id']) {
                     foreach ($data['staff_id'] as $value) {
-                        $staffs[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
+                        $staffs[] = Staff::where('id', $value)->where('status', config('common.status.active'))->first();
                     }
                 } else {
                     $staffs = '';
                 }
                 foreach ($data['service_id'] as $value) {
-                    $services[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+                    $services[] = Service::where('id', $value)->where('status', config('common.status.active'))->first();
                 }
             }
-            return view('client.detail',compact(['orders','staffs','services']));
+            return view('client.detail', compact(['orders', 'staffs', 'services']));
         } else {
             return abort(404);
         }
@@ -168,31 +168,31 @@ class HomeController extends Controller
     {
         if ($request->cookie('customer')) {
             $check = Order::findOrFail($id);
-            $staffs   = Staff::where('status',config('common.status.active'))->get();
-            $services = Service::where('status',config('common.status.active'))->get();
-            $order = Order::with('order_details')->where('id',$id)->first();
+            $staffs   = Staff::where('status', config('common.status.active'))->get();
+            $services = Service::where('status', config('common.status.active'))->get();
+            $order = Order::with('order_details')->where('id', $id)->first();
             foreach ($order->order_details as $detail) {
                 $data = unserialize($detail->detail);
                 if ($data['staff_id']) {
                     foreach ($data['staff_id'] as $value) {
-                        $getStaff[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
+                        $getStaff[] = Staff::where('id', $value)->where('status', config('common.status.active'))->first();
                     }
                 } else {
                     $getStaff = '';
                 }
                 foreach ($data['service_id'] as $value) {
-                    $getService[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+                    $getService[] = Service::where('id', $value)->where('status', config('common.status.active'))->first();
                 }
             }
-            return view('client.update', compact(['staffs', 'services','order','getStaff','getService']));
+            return view('client.update', compact(['staffs', 'services', 'order', 'getStaff', 'getService']));
         } else {
-            return abort(404);   
+            return abort(404);
         }
     }
     public function updateBook(BookingUpdate $request, $id)
     {
         if ($request->cookie('customer')) {
-            $order = Order::with('customer')->where('id',$id)->first();
+            $order = Order::with('customer')->where('id', $id)->first();
             $data = [
                 'staff_id' => $request->staff,
                 'service_id' => $request->service,
@@ -200,13 +200,13 @@ class HomeController extends Controller
             $setting = Setting::all()->first();
             if ($request->staff) {
                 foreach ($request->staff as $value) {
-                    $staffs[] = Staff::where('id',$value)->first();
+                    $staffs[] = Staff::where('id', $value)->first();
                 }
             } else {
                 $staffs = '';
             }
             foreach ($request->service as $value) {
-                $services[] = Service::where('id',$value)->first();
+                $services[] = Service::where('id', $value)->first();
             }
             $dataSendMail = [
                 'fullname' => $order->customer->name,
@@ -235,7 +235,7 @@ class HomeController extends Controller
                 'detail' => serialize($data),
             ];
             $addOrderDetail = OrderDetail::insert($order_detail);
-            
+
             $request->session()->flash('success', 'Đặt lịch thành công!');
             return redirect()->back();
         } else {
@@ -246,7 +246,7 @@ class HomeController extends Controller
     {
         if ($request->phone_history == null && $request->code_history == null) {
             $result = [
-                'key'   => '0',
+                'key'   => 0,
                 'value' => 'Không tồn tại thông tin!'
             ];
             return response()->json($result);
@@ -254,7 +254,7 @@ class HomeController extends Controller
             $check_cutomer = Customer::where('phone', $request->phone_history)->first();
             if ($check_cutomer == null) {
                 $result = [
-                    'key'   => '0',
+                    'key'   => 0,
                     'value' => 'Không tồn tại thông tin!'
                 ];
                 return response()->json($result);
@@ -264,7 +264,7 @@ class HomeController extends Controller
                         ->where('customer_id', $check_cutomer->id)
                         ->limit(5)->orderBy('created_at', 'desc')->get();
                     $result = [
-                        'key'   => '1',
+                        'key'   => 1,
                         'value' => $orders
                     ];
                     foreach ($orders as $order) {
@@ -279,7 +279,7 @@ class HomeController extends Controller
                     return response()->json($result);
                 } else {
                     $result = [
-                        'key'   => '0',
+                        'key'   => 0,
                         'value' => 'Không tồn tại thông tin!'
                     ];
                     return response()->json($result);
