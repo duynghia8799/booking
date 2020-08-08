@@ -526,7 +526,7 @@
 						<div class="row">
 							<div class="col-12 col-md-8 offset-md-2">
 								<div class="d-flex text-center">
-									<a class="flex-fill btn-styled show-order-section btn-action-step-1" href="javascript:void(0)">ĐẶT THÊM LỊCH</a>
+									<a class="flex-fill btn-styled show-order-section btn-action-step-1" href="/">ĐẶT THÊM LỊCH</a>
 									<a style="background-color: #27AAE1;" class="flex-fill btn-styled text-white close-tab" href="javascript:void(0)">XONG</a>
 								</div>
 							</div>
