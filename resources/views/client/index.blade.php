@@ -599,17 +599,17 @@
 			</div>
 		</div>
 	</div>
-	<form class="text-ts" action="{{route('booking')}}" method="post" id="form-booking">
+	<form class="d-none" action="{{route('booking')}}" method="post" id="form-booking">
 		@csrf
-		<input id="phone" name="phone">
-		<input id="partner" name="partner">
-		<input id="fullname" name="fullname">
-		<input class="form-control" id="start_at" name="start_at">
+		<input type="hidden" id="phone" name="phone">
+		<input type="hidden" id="partner" name="partner">
+		<input type="hidden" id="fullname" name="fullname">
+		<input type="hidden" class="form-control" id="start_at" name="start_at">
 		@foreach($staffs as $staff)
-		<input class="staff" type="checkbox" value="{{$staff->id}}" data-name="{{$staff->name}}" name="staff[]">{{$staff->name}}<br />
+		<input class="staff d-none" type="checkbox" value="{{$staff->id}}" data-name="{{$staff->name}}" name="staff[]">
 		@endforeach<br />
 		@foreach($services as $service)
-		<input class="service" type="checkbox" value="{{$service->id}}" data-name="{{$service->name}}" name="service[]">{{$service->name}}<br />
+		<input class="service d-none" type="checkbox" value="{{$service->id}}" data-name="{{$service->name}}" name="service[]">
 		@endforeach
 	</form>
 	<form class="d-none" action="{{route('history')}}" method="post" id="form-history">
