@@ -268,7 +268,7 @@
 							<div class="row">
 								<div class="col-12 col-md-8 offset-md-2">
 									<div class="form-group">
-										<input type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX" value="0974081997">
+										<input type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX">
 									</div>
 								</div>
 							</div>
@@ -302,10 +302,10 @@
 							</div>
 							<div class="row">
 								<div class="col-6 col-md-5 offset-md-1">
-									<input type="text" class="form-control" id="data-fullname" name="data-fullname" value="Nguyễn Văn Mạnh">
+									<input type="text" class="form-control" id="data-fullname" name="data-fullname" placeholder="Họ và tên">
 								</div>
 								<div class="col-6 col-md-5">
-									<input type="text" class="form-control" id="data-partner" name="data-partner" value="8">
+									<input type="text" class="form-control" id="data-partner" name="data-partner" placeholder="Nhập số người đi cùng">
 								</div>
 							</div>
 						</div>
@@ -631,7 +631,7 @@
 				$('#phone_history').val(phone);
 			} else {
 				$('#phone_history').focus();
-				alert('Vui lòng nhập số điện thoại!')
+				swal('Vui lòng nhập số điện thoại!','','error');
 				return;
 			}
 			var data = {};
@@ -675,7 +675,7 @@
 					}
 				},
 				error: function(err) {
-					alert('Đã có lỗi xảy ra! Xin hãy thử lại sau.');
+					swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!','','error');
 				}
 			});
 
@@ -690,7 +690,7 @@
 					var startAt = new Date(startAtString);
 					var t = startAt.getTime() - new Date();
 					if (t <= 0) {
-						alert('Thời gian không hợp lệ')
+						swal('Thời gian không hợp lệ!','','error');
 					} else {
 						$("#start_at").val(startAtString);
 					}
@@ -708,7 +708,7 @@
 		}).on('changeDate', function(ev) {
 			var t = ev.date.getTime() - new Date();
 			if (t <= 0) {
-				alert('Thời gian không hợp lệ')
+				swal('Thời gian không hợp lệ!','','error');
 			} else {
 				var startAt = moment(ev.date).format('YYYY/MM/DD HH:mm');
 				$("#start_at").val(startAt);
@@ -738,6 +738,8 @@
 			});
 			$('.order-section').removeClass('d-none');
 			$('#history-section').addClass('d-none');
+			changeStep(1);
+			changeStep(2);
 			changeStep(3);
 			// changeStep(4);
 		});
@@ -760,7 +762,7 @@
 						break;
 					} else {
 						$('#data-phone').focus();
-						alert('Vui lòng nhập số điện thoại!')
+						swal('Vui lòng nhập số điện thoại!','','error');
 						return;
 					}
 				}
