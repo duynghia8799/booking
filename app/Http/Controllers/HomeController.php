@@ -13,23 +13,27 @@ use Illuminate\Http\Request;
 
 use App\Http\Request\Booking;
 use App\Http\Request\BookingUpdate;
+
 class HomeController extends Controller
 {
 
     public function index()
     {
-        $staffs   = Staff::where('status',config('common.status.active'))->get();
-        $services = Service::where('status',config('common.status.active'))->get();
+        $staffs   = Staff::where('status', config('common.status.active'))->get();
+        $services = Service::where('status', config('common.status.active'))->get();
         return view('client.index', compact(['staffs', 'services']));
     }
 
     public function redirect()
     {
-       return view('client.redirect');
+        return view('client.redirect');
     }
 
     public function booking(Booking $request)
     {
+        if (count($request->staff) > count($request->service)) {
+            $request->staff = array_slice($request->staff, 0, count($request->service));
+        }
         $data = [
             'staff_id' => $request->staff,
             'service_id' => $request->service,
@@ -63,8 +67,7 @@ class HomeController extends Controller
                 'detail' => serialize($data),
             ];
             $addOrderDetail = OrderDetail::insert($order_detail);
-        } 
-        else {
+        } else {
             /*
              *   Insert to table Order
              */
@@ -89,13 +92,13 @@ class HomeController extends Controller
          */
         if ($request->staff) {
             foreach ($request->staff as $value) {
-                $staffs[] = Staff::where('id',$value)->first();
+                $staffs[] = Staff::where('id', $value)->first();
             }
         } else {
             $staffs = '';
         }
         foreach ($request->service as $value) {
-            $services[] = Service::where('id',$value)->first();
+            $services[] = Service::where('id', $value)->first();
         }
         $dataSendMail = [
             'fullname' => $request->fullname,
@@ -105,7 +108,7 @@ class HomeController extends Controller
             'service'  => $services,
             'note'     => $request->note,
         ];
-        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
+        // \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back()->with('<script>window.close();</script>');
     }
@@ -116,59 +119,58 @@ class HomeController extends Controller
             $request->session()->flash('error', 'Không tồn tại thông tin');
             return redirect()->back();
         } else if ($request->phone_history != null || $request->code_history != null) {
-            $check_cutomer = Customer::where('phone',$request->phone_history)->first();
+            $check_cutomer = Customer::where('phone', $request->phone_history)->first();
             if ($check_cutomer == null) {
                 $request->session()->flash('error', 'Không tồn tại thông tin');
                 return redirect()->back();
             } else {
                 if ($check_cutomer->code === $request->code_history) {
-                    $orders = Order::where('customer_id',$check_cutomer->id)->limit(5)->orderBy('created_at','desc')->get();
-                    return view('client.invoice',compact('orders'));
+                    $orders = Order::where('customer_id', $check_cutomer->id)->limit(5)->orderBy('created_at', 'desc')->get();
+                    return view('client.invoice', compact('orders'));
                 } else {
                     $request->session()->flash('error', 'Sai mã code');
                     return redirect()->back();
                 }
             }
         }
-
     }
 
     public function invoice($id)
     {
         $check = Order::findOrFail($id);
-        $orders = Order::with(['customer','order_details'])->where('id',$id)->first();
+        $orders = Order::with(['customer', 'order_details'])->where('id', $id)->first();
         foreach ($orders->order_details as $detail) {
             $data = unserialize($detail->detail);
             foreach ($data['staff_id'] as $value) {
-                $staffs[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
+                $staffs[] = Staff::where('id', $value)->where('status', config('common.status.active'))->first();
             }
             foreach ($data['service_id'] as $value) {
-                $services[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+                $services[] = Service::where('id', $value)->where('status', config('common.status.active'))->first();
             }
         }
-        return view('client.detail',compact(['orders','staffs','services']));
+        return view('client.detail', compact(['orders', 'staffs', 'services']));
     }
 
     public function duplidateBook($id)
     {
         $check = Order::findOrFail($id);
-        $staffs   = Staff::where('status',config('common.status.active'))->get();
-        $services = Service::where('status',config('common.status.active'))->get();
-        $order = Order::with('order_details')->where('id',$id)->first();
+        $staffs   = Staff::where('status', config('common.status.active'))->get();
+        $services = Service::where('status', config('common.status.active'))->get();
+        $order = Order::with('order_details')->where('id', $id)->first();
         foreach ($order->order_details as $detail) {
             $data = unserialize($detail->detail);
             foreach ($data['staff_id'] as $value) {
-                $getStaff[] = Staff::where('id',$value)->where('status',config('common.status.active'))->first();
+                $getStaff[] = Staff::where('id', $value)->where('status', config('common.status.active'))->first();
             }
             foreach ($data['service_id'] as $value) {
-                $getService[] = Service::where('id',$value)->where('status',config('common.status.active'))->first();
+                $getService[] = Service::where('id', $value)->where('status', config('common.status.active'))->first();
             }
         }
-        return view('client.update', compact(['staffs', 'services','order','getStaff','getService']));
+        return view('client.update', compact(['staffs', 'services', 'order', 'getStaff', 'getService']));
     }
-    public function updateBook(BookingUpdate $request,$id)
+    public function updateBook(BookingUpdate $request, $id)
     {
-        $order = Order::with('customer')->where('id',$id)->first();
+        $order = Order::with('customer')->where('id', $id)->first();
         $data = [
             'staff_id' => $request->staff,
             'service_id' => $request->service,
@@ -176,16 +178,16 @@ class HomeController extends Controller
         $setting = Setting::all()->first();
         if ($request->staff) {
             foreach ($request->staff as $value) {
-                $staffs[] = Staff::where('id',$value)->first();
+                $staffs[] = Staff::where('id', $value)->first();
             }
         } else {
             $staffs = '';
         }
         foreach ($request->staff as $value) {
-            $staffs[] = Staff::where('id',$value)->first();
+            $staffs[] = Staff::where('id', $value)->first();
         }
         foreach ($request->service as $value) {
-            $services[] = Service::where('id',$value)->first();
+            $services[] = Service::where('id', $value)->first();
         }
         $dataSendMail = [
             'fullname' => $order->customer->name,
@@ -195,7 +197,7 @@ class HomeController extends Controller
             'service'  => $services,
             'note'     => $request->note,
         ];
-        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
+        // \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         /*
          *   Insert to table Order
          */
@@ -214,8 +216,53 @@ class HomeController extends Controller
             'detail' => serialize($data),
         ];
         $addOrderDetail = OrderDetail::insert($order_detail);
-        
+
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back();
+    }
+    public function jsonHistory(Request $request)
+    {
+        if ($request->phone_history == null && $request->code_history == null) {
+            $result = [
+                'key'   => '0',
+                'value' => 'Không tồn tại thông tin!'
+            ];
+            return response()->json($result);
+        } else if ($request->phone_history != null || $request->code_history != null) {
+            $check_cutomer = Customer::where('phone', $request->phone_history)->first();
+            if ($check_cutomer == null) {
+                $result = [
+                    'key'   => '0',
+                    'value' => 'Không tồn tại thông tin!'
+                ];
+                return response()->json($result);
+            } else {
+                if ($check_cutomer->code === $request->code_history) {
+                    $orders = Order::with(['customer', 'order_details'])
+                        ->where('customer_id', $check_cutomer->id)
+                        ->limit(5)->orderBy('created_at', 'desc')->get();
+                    $result = [
+                        'key'   => '1',
+                        'value' => $orders
+                    ];
+                    foreach ($orders as $order) {
+                        $order_detail = OrderDetail::where('order_id', $order->id)->first();
+                        $order_detail = unserialize($order_detail->detail);
+                        $order_detail_id = (object) $order_detail;
+                        $order['staffIDs'] = $order_detail_id->staff_id;
+                        $order['serviceIDs'] = $order_detail_id->service_id;
+                        $order['detailStaffs'] = Staff::whereIn('id', (array)$order_detail_id->staff_id)->get();
+                        $order['detailServices'] = Service::whereIn('id', (array)$order_detail_id->service_id)->get();
+                    }
+                    return response()->json($result);
+                } else {
+                    $result = [
+                        'key'   => '0',
+                        'value' => 'Không tồn tại thông tin!'
+                    ];
+                    return response()->json($result);
+                }
+            }
+        }
     }
 }
