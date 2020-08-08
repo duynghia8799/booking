@@ -26,6 +26,7 @@ class AddService extends FormRequest
         return [
             'name' => 'required|string|max:191',
             'description' => 'nullable|string|max:225',
+            'priority' => 'required|numeric',
         ];
     }
 
@@ -35,6 +36,8 @@ class AddService extends FormRequest
             'name.max' => 'Vui lòng không nhập quá 191 ký tự',
 
             'description.max' => 'Vui lòng không nhập quá 225 ký tự',
+            'priority.required' => 'Vui lòng không bỏ trống',
+            'priority.numeric' => 'Vui lòng chỉ nhập số',
         ];
     }
 }

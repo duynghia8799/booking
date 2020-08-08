@@ -40,7 +40,7 @@ class ServiceController extends Controller
                         return $service->description;
                     }
                 })
-               ->editColumn('status', function ($service) {
+                ->editColumn('status', function ($service) {
                     if ($service->status == config('common.status.active')) {
                         return '<span class="text-success">Đang hoạt động</span>';
                     } else {
@@ -76,7 +76,12 @@ class ServiceController extends Controller
 
     public function create()
     {
-    	return view('admin.service.create');
+        $isTreatmen = 
+        [
+            '1' => 'Dịch vụ thêm',
+            '0' => 'Liệu trình'
+        ];
+    	return view('admin.service.create',compact('isTreatmen'));
     }
 
     public function store(AddService $request)
@@ -88,14 +93,19 @@ class ServiceController extends Controller
     }
 
     public function edit($id)
-    {
+    {   
+        $isTreatmen = 
+        [
+            '1' => 'Dịch vụ thêm',
+            '0' => 'Liệu trình'
+        ];
         $service = Service::findOrFail($id);
         $status = 
             [
                 '1' => 'Đang hoạt động',
                 '0' => 'Đã tạm dừng'
             ];
-        return view('admin.service.edit',compact(['service','status']));
+        return view('admin.service.edit',compact(['service','status','isTreatmen']));
     }
 
     public function update(EditService $request,$id)

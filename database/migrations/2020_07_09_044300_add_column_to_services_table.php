@@ -15,6 +15,9 @@ class AddColumnToServicesTable extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->integer('duration')->default(0);
+            $table->integer('isTreatment')->default(0);
+            // 0 mặc định là liệu trình, 1 là dịch vụ thêm
+            $table->integer('priority')->default(0);
         });
     }
 

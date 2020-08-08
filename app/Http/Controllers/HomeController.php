@@ -35,6 +35,7 @@ class HomeController extends Controller
             'staff_id' => $request->staff,
             'service_id' => $request->service,
         ];
+        dd($data);
         $setting = Setting::all()->first();
         $check_customer = Customer::where('phone', $request->phone)->first();
         if ($check_customer == null) {
