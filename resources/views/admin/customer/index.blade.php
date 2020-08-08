@@ -67,7 +67,7 @@
                 </div>
                 <!--end: Search Form -->
                 <!--begin: Datatable -->
-                <table class="table table-striped- table-bordered table-hover table-checkable" id="levels" style="width:100%">
+                <table class="table table-striped- table-bordered table-hover table-checkable" id="customers" style="width:100%">
                     <thead>
                         <tr>
                             <th>
@@ -84,42 +84,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                            @foreach ($customers as $customer)
-                            <tr>
-                                <td>
-                                    <span style="text-transform: uppercase;">
-                                        {{$customer -> name}}
-                                    </span>
-                                </td>
-                                <td>
-                                    {{$customer -> phone}}
-                                </td>
-                                <td>
-                                	@if ($customer -> code != null)
-										<p class="text-success">{{$customer -> code}}</p>
-                                	@else
-										<p class="text-danger">Chưa có mã code</p>
-                                	@endif
-                                </td>
-                                <td>
-                                    <div class="dropdown">
-                                        <span aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton">
-                                            <i class="flaticon-folder">
-                                            </i>
-                                        </span>
-                                        <div aria-labelledby="dropdownMenuButton" class="dropdown-menu" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, -125px, 0px);" x-placement="top-start">
-                                            <a class="dropdown-item" href="{{route('customer.edit',$customer->id)}}">
-                                                <i class="la la-edit text-success">
-                                                </i>
-                                                Tạo/Hủy mã code
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                    </tbody>
+                  
                 </table>
                 <!--end: Datatable -->
             </div>
@@ -131,21 +96,29 @@
 @endsection
 @section('script')
 <script>
-    $('.btn-remove').on('click', function(){
-        var removeUrl = $(this).attr('linkurl');
-        swal({
-            title: 'Bạn có chắc chắn muốn xóa khách hàng này không?',
-            text: "Sau khi xóa, bạn sẽ không thể khôi phục lại dữ liệu!",
-            type: 'warning',
-            showCancelButton: !0,
-            cancelButtonColor: '#dc3545',
-            confirmButtonText: 'Đồng ý',
-            cancelButtonText: 'Hủy',
-            dangerMode: true
-        }).then((result) => {
-            if (result.value) {
-                window.location.href = removeUrl;
-            }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $(document).ready(function(){
+        var dataTable = $('#customers').DataTable({
+            processing: true,
+            serverSide: true,
+            language: {
+                processing: "<div id='loader'><h4>ĐANG TẢI...</h4></div>"
+            },
+            
+            ajax: {
+                url:'{{route('customer.datatables')}}',
+                type: 'GET',
+            },
+            columns: [
+                { data: 'name', name: 'name' },
+                { data: 'phone', name: 'phone' },
+                { data: 'code', name: 'code' },
+                { data: 'action', name: 'action' }
+            ],
         });
     });
 </script>

@@ -82,14 +82,48 @@
                                         </p>
                                     @endif
                                 </div>
+                                <div class="m-form__group form-group">
+                                    <div class="m-radio-inline">
+                                        @foreach($isTreatmen as $key => $item)
+                                        <label class="m-radio">
+                                            <input type="radio" name="isTreatment"
+                                                @if ($key == 0)
+                                                    checked
+                                                @endif 
+                                            value="{{$key}}"> {{$item}}
+                                            <span></span>
+                                        </label>
+                                        @endforeach
+                                    </div>
+                                    @if ($errors->has('isTreatment'))
+                                        <p class="text-danger">
+                                            {{ $errors->first('isTreatment') }}
+                                        </p>
+                                    @endif
+                                </div>
                                 <div class="form-group m-form__group">
                                     <label for="description">
-                                        Mô tả ngắn
+                                        Giá hiển thị
                                     </label>
                                     <textarea class="form-control m-input m-input--air m-input--pill" id="description" name="description" rows="4" value="{{ old('description') }}"></textarea>
                                     @if ($errors->has('description'))
                                         <p class="text-danger">
                                             {{ $errors->first('description') }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="form-group m-form__group">
+                                    <label for="priority">
+                                        Độ ưu tiên hiển thị
+                                        <span class="text-danger">
+                                            *
+                                        </span>
+                                    </label>
+                                    <input class="form-control m-input" id="priority" name="priority" placeholder="Nhập số" type="text" value="{{ old('priority') }}">
+                                    </input>
+                                    @if ($errors->has('priority'))
+                                        <p class="text-danger">
+                                            {{ $errors->first('priority') }}
                                         </p>
                                     @endif
                                 </div>
@@ -99,9 +133,6 @@
                                             <div class="m-form__actions">
                                                 <button class="btn btn-primary" type="submit">
                                                     Thêm
-                                                </button>
-                                                <button class="btn btn-danger" type="reset">
-                                                    Hủy
                                                 </button>
                                                 <a href="{{route('service.index')}}" class="btn btn-danger">Quay lại</a>
                                             </div>

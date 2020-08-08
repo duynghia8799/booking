@@ -12,5 +12,7 @@ class Service extends Model
     	'description',
     	'status',
     	'duration',
+    	'isTreatment',
+    	'priority',
     ];
 }

@@ -27,7 +27,7 @@ class BookingUpdate extends FormRequest
             'number_person' => 'numeric',
             'start_at' => 'required|max:191',
             'service' => 'required',
-            'staff' => 'required',
+            'staff' => 'nullable',
             'note' => 'nullable|max:225',
         ];
     }
@@ -39,8 +39,7 @@ class BookingUpdate extends FormRequest
             'start_at.required' => 'Vui lòng không để trống',
             'start_at.max' => 'Vui lòng không nhập quá 191 ký tự',
 
-            'service.required' => 'Vui lòng chọn  ít nhất 1 dịch vụ',
-            'staff.required' => 'Vui lòng chọn ít nhất 1 nhân viên',
+            'service.required' => 'Vui lòng chọn  ít nhất 1 liệu trình',
 
             'note.max' =>  'Vui lòng không nhập quá 191 ký tự',
 

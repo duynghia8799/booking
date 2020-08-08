@@ -30,6 +30,8 @@ Route::prefix('/admin/staff')->middleware(['auth','checkAdmin'])->group(function
 	$controller = 'Admin\StaffController@';
 	// List staff
 	Route::get('/', $controller . 'index')->name('staff.index');
+	// Datatables
+	Route::get('/datatables', $controller . 'datatables')->name('staff.datatables');
 	// View add staff
 	Route::get('/create', $controller . 'create')->name('staff.create');
 	// View edit staff
@@ -39,13 +41,15 @@ Route::prefix('/admin/staff')->middleware(['auth','checkAdmin'])->group(function
 	// Logic add staff
 	Route::post('/store', $controller . 'store')->name('staff.store');
 	// Destroy staff
-	Route::get('/delete/{id}', $controller . 'destroy')->name('staff.destroy');
+	Route::post('/delete/{id}', $controller . 'destroy')->name('staff.destroy');
 });
 // Services
 Route::prefix('/admin/service')->middleware(['auth','checkAdmin'])->group(function() {
 	$controller = 'Admin\ServiceController@';
 	// List service
 	Route::get('/', $controller . 'index')->name('service.index');
+	// Datatables
+	Route::get('/datatables', $controller . 'datatables')->name('service.datatables');
 	// View add service
 	Route::get('/create', $controller . 'create')->name('service.create');
 	// View edit service
@@ -55,11 +59,13 @@ Route::prefix('/admin/service')->middleware(['auth','checkAdmin'])->group(functi
 	// Logic add service
 	Route::post('/store', $controller . 'store')->name('service.store');
 	// Destroy service
-	Route::get('/delete/{id}', $controller . 'destroy')->name('service.destroy');
+	Route::post('/delete/{id}', $controller . 'destroy')->name('service.destroy');
 });
 // Orders
 Route::prefix('/admin/order')->middleware(['auth','checkAdmin'])->group(function() {
 	$controller = 'Admin\OrderController@';
+	// Datatables
+	Route::get('/datatables', $controller . 'datatables')->name('order.datatables');
 	// List order
 	Route::get('/', $controller . 'index')->name('order.index');
 	// Logic edit order
@@ -72,6 +78,8 @@ Route::prefix('/admin/customer')->middleware(['auth','checkAdmin'])->group(funct
 	$controller = 'Admin\CustomerController@';
 	// List customer
 	Route::get('/', $controller . 'index')->name('customer.index');
+	// Datatables
+	Route::get('/datatables', $controller . 'datatables')->name('customer.datatables');
 	// View edit customer
 	Route::get('/edit/{id}', $controller . 'edit')->name('customer.edit');
 	// Logic edit customer

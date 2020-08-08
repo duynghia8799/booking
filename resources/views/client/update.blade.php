@@ -121,11 +121,13 @@
 														@foreach($staffs as $staff)
 														<label class="m-checkbox m-checkbox--check-bold">
 															<input type="checkbox" value="{{$staff->id}}" name="staff[]"
+															@if($getStaff != '')
 																@foreach ($getStaff as $checkStaff)
 																	@if ($checkStaff->id === $staff->id)
 																		checked
 																	@endif
 																@endforeach
+															@endif
 															> {{$staff->name}}
 															<span></span>
 														</label>
