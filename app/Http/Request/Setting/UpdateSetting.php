@@ -25,6 +25,11 @@ class UpdateSetting extends FormRequest
     {
         return [
             'email' => 'required|email|max:191',
+            'hotline' => 'required|numeric',
+            'address' => 'required|max:191',
+            'time_open' => 'required|max:191',
+            'google_map' => 'required',
+            'link_fb' => 'required|max:191',
         ];
     }
 
@@ -33,6 +38,20 @@ class UpdateSetting extends FormRequest
             'email.required' => 'Vui lòng không để trống',
             'email.email' => 'Vui lòng nhập đúng định dạng email',
             'email.max' => 'Vui lòng không nhập quá 191 ký tự',
+
+            'hotline.required' => 'Vui lòng không bỏ trống',
+            'hotline.numeric' => 'Vui lòng chỉ nhập số',
+
+            'address.required' => 'Vui lòng không bỏ trống',
+            'address.max' => 'Vui lòng không nhập quá 191 ký tự',
+
+            'time_open.required' => 'Vui lòng không bỏ trống',
+            'time_open.max' => 'Vui lòng không nhập quá 191 ký tự',
+
+            'google_map.required' => 'Vui lòng không bỏ trống',
+
+            'link_fb.max' => 'Vui lòng không nhập quá 191 ký tự',
+            'link_fb.required' => 'Vui lòng không bỏ trống',
         ];
     }
 }

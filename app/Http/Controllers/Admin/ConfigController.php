@@ -8,18 +8,18 @@ use App\Model\Setting;
 use App\Http\Request\Setting\UpdateSetting;
 class ConfigController extends Controller
 {
-    public function index()
+    public function setting()
     {
-    	return view('admin.setting.edit');
+        $inforWeb = Setting::get()->first();
+    	return view('admin.setting.edit',compact('inforWeb'));
     }
 
-    public function store(UpdateSetting $request)
+    public function update(UpdateSetting $request, $id)
     {
-    	$settings = Setting::all();
-		foreach ($settings as $setting) {
-    		$setting->email = $request->email;
-    		$setting->save();
-    	}
+        // dd($request->all());.
+        $setting = Setting::findOrFail($id);
+        $data = $request->except('_token');
+    	$setting->update($data);
     	$request->session()->flash('success', 'Cập nhật thành công!');
         return redirect()->back();
     }

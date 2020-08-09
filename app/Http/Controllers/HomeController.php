@@ -20,13 +20,14 @@ class HomeController extends Controller
 
     public function index()
     {
+        $inforWeb = Setting::get()->first();
         $staffs   = Staff::where('status', config('common.status.active'))->get();
         // 0 là liệu trình, 1 là dịch vụ
         // Lấy liệu trình
         $services = Service::where('status', config('common.status.active'))->where('isTreatment', 0)->orderBy('priority')->get();
         // Lấy dịch vụ thêm
         $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
-        return view('client.index', compact(['staffs', 'services', 'extraservices']));
+        return view('client.index', compact(['staffs','inforWeb', 'services', 'extraservices']));
     }
 
     public function redirect()

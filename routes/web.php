@@ -90,9 +90,8 @@ Route::prefix('/admin/customer')->middleware(['auth','checkAdmin'])->group(funct
 // Settings
 Route::prefix('/admin/setting')->middleware(['auth','checkAdmin'])->group(function() {
 	$controller = 'Admin\ConfigController@';
-	// List staff
-	Route::get('/', $controller . 'index')->name('setting');
-	Route::post('/store', $controller . 'store')->name('setting.store');
+	Route::get('/', $controller . 'setting')->name('setting');
+	Route::post('/update/{id}', $controller . 'update')->name('setting.update');
 });
 // Route For Authentication
 Auth::routes(['register' => false]);

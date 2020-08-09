@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<title>Đặt lịch</title>
 	<link href="{{asset('/template/metronic/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -567,23 +567,23 @@
 					<div class="mt-3 col-7 col-md-12 p-0">
 						<div class="text-center"><b>TÌM HIỂU CHÚNG TÔI TRÊN FACEBOOK</b></div>
 						<div class="text-center fb-link">
-							<a href="https://massagetamsen.vn">
+							<a href="{{$inforWeb->link_fb}}">
 								<img src="{{asset('/template/metronic/assets/app/media/img/icons/fb-logo.webp')}}" alt=""></a>
-							<a href="https://massagetamsen.vn"><img src="{{asset('/template/metronic/assets/app/media/img/icons/fb-logo.webp')}}" alt=""></a>
+							<a href="{{$inforWeb->link_fb}}"><img src="{{asset('/template/metronic/assets/app/media/img/icons/fb-logo.webp')}}" alt=""></a>
 						</div>
 					</div>
 					<div class="text-center mt-3 col-5 col-md-12 p-0">
 						<div class="mb-3">
 							<b>HOTLINE HỖ TRỢ</b>
 						</div>
-						<a href="tel:0929358668" class="hotline btn-styled m-0">092&nbsp;935&nbsp;86&nbsp;68</a>
+						<a href="tel:0929358668" class="hotline btn-styled m-0">{{$inforWeb->hotline}}</a>
 					</div>
 				</div>
 				<div class="col-12 col-md-6">
 					<div class="mt-3 mb-1">
 						<div class="text-center m-2"> <b>CHỈ ĐƯỜNG TRÊN GOOGLE MAP</b> </div>
 						<div>
-							<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.95238074428!2d105.765692615535!3d21.034591284403266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454be50f7894d%3A0x77ace9a6cc7e867!2sA2%20Vinhomes%20Gardenia!5e0!3m2!1sen!2s!4v1596635329515!5m2!1sen!2s" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+							{!! $inforWeb->google_map !!}
 						</div>
 					</div>
 				</div>
@@ -591,11 +591,9 @@
 					<div class="mt-3 mb-1">
 						<b>TRUNG TÂM CHĂM SÓC SỨC KHOẺ TÂM SEN</b><br /><br />
 						Địa chỉ<br />
-						Biệt thự B15-9 Vinhomes Gardenia,<br />
-						P. Cầu Diễn, Q Nam Từ Liêm, Hà Nội<br /><br />
+						{{$inforWeb->address}}<br /><br />
 						Giờ mở cửa:<br />
-						10:00 ~ 22:00 (từ thứ 2 đến thứ 6)<br />
-						09:00 ~ 22:00 (thứ 7 và chủ nhật)<br />
+						<span style="white-space: pre-wrap;">{{$inforWeb->time_open}}</span>
 					</div>
 				</div>
 			</div>
