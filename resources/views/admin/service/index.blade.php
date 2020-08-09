@@ -71,6 +71,25 @@
                                     <div class="d-md-none m--margin-bottom-10">
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group m-form__group">
+                                        <label for="searchByType">
+                                            Thể loại
+                                        </label>
+                                        <select class="form-control m-input m-input--solid" name="searchByType" id="searchByType">
+                                            <option value="">
+                                                All
+                                            </option>
+                                            @foreach ($isTreatmen as $key => $value)
+                                            <option value="{{$key}}">
+                                                {{$value}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="d-md-none m--margin-bottom-10">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-4 order-1 order-xl-2 m--align-right">
@@ -98,6 +117,9 @@
                             </th>
                             <th>
                                 Mô tả ngắn
+                            </th>
+                            <th>
+                                Thể loại
                             </th>
                             <th>
                                 Trạng thái
@@ -136,12 +158,13 @@
                 type: 'GET',
                 data: function (e) {
                     e.searchByStatus = $('#searchByStatus').val();
-                    console.log(e.searchByStatus);
+                    e.searchByType = $('#searchByType').val();
                 }
             },
             columns: [
                 { data: 'name', name: 'name' },
                 { data: 'description', name: 'description' },
+                { data: 'isTreatment', name: 'isTreatment' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action' }
             ],
@@ -177,6 +200,9 @@
             }
         });
         $('#searchByStatus').change(function(){
+            dataTable.draw(true);
+        });
+        $('#searchByType').change(function(){
             dataTable.draw(true);
         });
     });

@@ -20,7 +20,12 @@ class ServiceController extends Controller
             '1' => 'Đang hoạt động',
             '0' => 'Đã tạm dừng'
         ];
-    	return view('admin.service.index',compact('status'));
+        $isTreatmen = 
+        [
+            '1' => 'Dịch vụ thêm',
+            '0' => 'Liệu trình'
+        ];
+    	return view('admin.service.index',compact(['status','isTreatmen']));
     }
 
     public function datatables(Request $request)
@@ -29,6 +34,9 @@ class ServiceController extends Controller
             if ($request->get('searchByStatus') != null) {
                 $status = $request->get('searchByStatus');
                 $services = Service::where('status',$status)->get();
+            } else if ($request->get('searchByType') != null) {
+                $isTreatment = $request->get('searchByType');
+                $services = Service::where('isTreatment',$isTreatment)->get();
             } else {
                  $services = Service::all();
             }
@@ -38,6 +46,13 @@ class ServiceController extends Controller
                         return 'Không có ghi chú!';
                     } else {
                         return $service->description;
+                    }
+                })
+                ->editColumn('isTreatment', function ($service) {
+                    if ($service->isTreatment == config('common.status.active')) {
+                        return '<span class="text-success">Dịch vụ thêm</span>';
+                    } else {
+                        return '<span class="text-danger">Liệu trình</span>';
                     }
                 })
                 ->editColumn('status', function ($service) {
@@ -69,7 +84,7 @@ class ServiceController extends Controller
                     </div>';
 
                 })
-                ->rawColumns(['status','description','action'])
+                ->rawColumns(['status','description','isTreatment','action'])
                 ->make(true);
         }
     }

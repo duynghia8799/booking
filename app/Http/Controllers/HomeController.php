@@ -21,8 +21,11 @@ class HomeController extends Controller
     public function index()
     {
         $staffs   = Staff::where('status', config('common.status.active'))->get();
-        $services = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
-        $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 0)->orderBy('priority')->get();
+        // 0 là liệu trình, 1 là dịch vụ
+        // Lấy liệu trình
+        $services = Service::where('status', config('common.status.active'))->where('isTreatment', 0)->orderBy('priority')->get();
+        // Lấy dịch vụ thêm
+        $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
         return view('client.index', compact(['staffs', 'services', 'extraservices']));
     }
 
@@ -33,7 +36,7 @@ class HomeController extends Controller
 
     public function booking(Booking $request)
     {
-        if (count($request->staff) > count($request->service)) {
+        if ($request->staff != null && count($request->staff) > count($request->service)) {
             $request->staff = array_slice($request->staff, 0, count($request->service));
         }
         $data = [
