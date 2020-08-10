@@ -145,7 +145,8 @@
 		}
 
 		.treatment,
-		.staff {
+		.staff,
+		.extraservice {
 			background-color: white;
 			color: #F57132;
 			margin: 5px 2px;
@@ -157,7 +158,8 @@
 		}
 
 		.treatment.choosen,
-		.staff.choosen {
+		.staff.choosen,
+		.extraservice.choosen {
 			background-color: #00AEEF;
 			color: white;
 			border: white solid 1px;
@@ -363,11 +365,11 @@
 								<div class="text-center step-title m-0 mb-1">
 									<b>DỊCH VỤ THÊM</b>
 								</div>
-								<div class="treatments text-center">
+								<div class="extraservices text-center">
 									<div class="d-flex">
 										@foreach ($extraservices as $extraservice)
-										<div class="treatment flex-fill" data-id="{{$extraservice->id}}">
-											<span>{{$extraservice->name}}</span>
+										<div class="extraservice flex-fill" data-id="{{$extraservice->id}}">
+											<span class="d-block">{{$extraservice->name}}</span>
 											<small>{{$extraservice->description}}</small>
 										</div>
 										@if (($loop->index+1)%3==0)
@@ -390,44 +392,9 @@
 							</div>
 						</div>
 						<!-- end choose service step -->
-						<!-- choose time step -->
-						<div class="step step-3 d-none" data-step="3">
-							<div class="step-wrapper">
-								<div class="text-center step-title m-0 m-t-3">
-									<div class="customer-name"></div>
-									<div class="customer-phone"></div>
-									<div><small class="number-partner"></small></div>
-								</div>
-								<div class="white-divide"></div>
-								<div class="text-center step-title m-0 m-t-3">
-									CHỌN THỜI GIAN
-								</div>
-
-								<div class="row">
-									<div class="col-12 col-md-8 offset-md-2">
-										<div class="d-flex text-center">
-											<a class="flex-fill btn-styled bg-white text-ts" href="javascript:void(0)" class="date" id="btn-pick-date" data-date-format="yyyy-mm-dd">CHỌN NGÀY</a>
-											<a class="flex-fill btn-styled bg-white text-ts" href="javascript:void(0)" id="btn-pick-time">CHỌN GIỜ</a>
-										</div>
-									</div>
-								</div>
-
-								<div class="action-direct-step">
-									<div class="float-left">
-										<b style="font-size: 18px; font-weight: 900;">&lt;&lt;</b>
-										<a class="flex-fill btn-styled previous-step" href="javascript:void(0)">QUAY LẠI</a>
-									</div>
-									<div class="float-right">
-										<a class="flex-fill btn-styled next-step" href="javascript:void(0)">CHỌN TIẾP</a>
-										<b style="font-size: 18px; font-weight: 900;">&gt;&gt;</b>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- end choose time step -->
 
 						<!-- choose staffs step -->
-						<div class="step step-4 d-none" data-step="4">
+						<div class="step step-3 d-none" data-step="3">
 							<div class="step-wrapper">
 								<div class="text-center step-title m-0 m-t-3">
 									<div class="customer-name"></div>
@@ -473,6 +440,41 @@
 						</div>
 						<!-- end choose staffs step -->
 
+						<!-- choose time step -->
+						<div class="step step-4 d-none" data-step="4">
+							<div class="step-wrapper">
+								<div class="text-center step-title m-0 m-t-3">
+									<div class="customer-name"></div>
+									<div class="customer-phone"></div>
+									<div><small class="number-partner"></small></div>
+								</div>
+								<div class="white-divide"></div>
+								<div class="text-center step-title m-0 m-t-3">
+									CHỌN THỜI GIAN
+								</div>
+
+								<div class="row">
+									<div class="col-12 col-md-8 offset-md-2">
+										<div class="d-flex text-center">
+											<a class="flex-fill btn-styled bg-white text-ts" href="javascript:void(0)" class="date" id="btn-pick-date" data-date-format="yyyy-mm-dd">CHỌN NGÀY</a>
+											<a class="flex-fill btn-styled bg-white text-ts" href="javascript:void(0)" id="btn-pick-time">CHỌN GIỜ</a>
+										</div>
+									</div>
+								</div>
+								<div class="text-center text-white display-picked-time"></div>
+								<div class="action-direct-step">
+									<div class="float-left">
+										<b style="font-size: 18px; font-weight: 900;">&lt;&lt;</b>
+										<a class="flex-fill btn-styled previous-step" href="javascript:void(0)">QUAY LẠI</a>
+									</div>
+									<div class="float-right">
+										<a class="flex-fill btn-styled next-step" href="javascript:void(0)">CHỌN TIẾP</a>
+										<b style="font-size: 18px; font-weight: 900;">&gt;&gt;</b>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end choose time step -->
 						<!-- confirm step -->
 						<div class="step step-5 d-none" data-step="5">
 							<div class="step-wrapper">
@@ -610,6 +612,7 @@
 			@foreach($services as $service)
 			<input class="service d-none" type="checkbox" value="{{$service->id}}" data-name="{{$service->name}}" name="service[]">
 			@endforeach
+			<input name="note" id="note"></input>
 		</form>
 		<form class="d-none" action="{{route('history')}}" method="post" id="form-history">
 			@csrf
@@ -630,7 +633,7 @@
 					$('#phone_history').val(phone);
 				} else {
 					$('#phone_history').focus();
-					swal('Vui lòng nhập số điện thoại!','','error');
+					swal('Vui lòng nhập số điện thoại!', '', 'error');
 					return;
 				}
 				var data = {};
@@ -646,11 +649,11 @@
 					contentType: 'application/json',
 					success: function(result) {
 						if (!result.key) {
-							swal(result.value,'','error');
+							swal(result.value, '', 'error');
 						}
 						if (result.key) {
 							if (result.value.length === 0) {
-								swal('Lịch sử đặt lịch của bạn đang trống!','','error');
+								swal('Lịch sử đặt lịch của bạn đang trống!', '', 'error');
 								return;
 							}
 							var orders = result.value;
@@ -674,27 +677,32 @@
 						}
 					},
 					error: function(err) {
-						swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!','','error');
+						swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!', '', 'error');
 					}
 				});
 
 			});
 			$('#btn-pick-date').datepicker("setDate", new Date())
 				.on('changeDate', function(ev) {
+					$('#btn-pick-date').datepicker('hide');
 					$('#btn-pick-time').datetimepicker('update', ev.date);
+					var date = moment(ev.date).format("YYYY/MM/DD");
+					var dateToDisplay = moment(ev.date).format("DD/MM/YYYY");
 					if ($("#start_at").val()) {
 						var time = moment($("#start_at").val()).format("HH:mm");
-						var date = moment(ev.date).format("YYYY/MM/DD");
 						var startAtString = date + ' ' + time;
 						var startAt = new Date(startAtString);
 						var t = startAt.getTime() - new Date();
 						if (t <= 0) {
-							swal('Thời gian không hợp lệ!','','error');
+							swal('Thời gian không hợp lệ!', '', 'error');
+							return;
 						} else {
 							$("#start_at").val(startAtString);
+							$('.display-picked-time').html(time + ' ' + dateToDisplay);
+							return;
 						}
 					}
-					$('#btn-pick-date').datepicker('hide');
+					$('.display-picked-time').html(dateToDisplay);
 				});
 			var timePicker = $('#btn-pick-time').datetimepicker({
 				pickDate: true,
@@ -707,10 +715,12 @@
 			}).on('changeDate', function(ev) {
 				var t = ev.date.getTime() - new Date();
 				if (t <= 0) {
-					swal('Thời gian không hợp lệ!','','error');
+					swal('Thời gian không hợp lệ!', '', 'error');
 				} else {
 					var startAt = moment(ev.date).format('YYYY/MM/DD HH:mm');
+					var displayTime = moment(ev.date).format('HH:mm - DD/MM/YYYY');
 					$("#start_at").val(startAt);
+					$('.display-picked-time').html(displayTime);
 				}
 			});
 		</script>
@@ -761,7 +771,7 @@
 							break;
 						} else {
 							$('#data-phone').focus();
-							swal('Vui lòng nhập số điện thoại!','','error');
+							swal('Vui lòng nhập số điện thoại!', '', 'error');
 							return;
 						}
 					}
@@ -770,10 +780,11 @@
 						var partner = $('#data-partner').val();
 						if (!fullname) {
 							$('#data-fullname').focus();
-							swal('Hãy nhập tên của bạn!','','error');
+							swal('Hãy nhập tên của bạn!', '', 'error');
+							return;
 						}
 						if ($('.treatment.choosen').length < 1) {
-							swal('Mời lừa chọn dịch vụ!','','error');
+							swal('Mời lừa chọn dịch vụ!', '', 'error');
 							return;
 						}
 						$('input.service').prop('checked', false);
@@ -781,6 +792,12 @@
 							let id = $(v).data('id');
 							$('input[name="service[]"][type="checkbox"][value=' + id + ']').prop('checked', true);
 						});
+						var extraservice = [];
+						$('.extraservice.choosen').each(function(i, v) {
+							let id = $(v).data('id');
+							extraservice.push(id);
+						});
+						$('#note').val(JSON.stringify(extraservice));
 						if (!partner) {
 							partner = 1;
 						}
@@ -789,18 +806,18 @@
 						break;
 					}
 					case 3: {
-						if (!$("#start_at").val() && st > step) {
-							swal('Mời chọn thời gian!','','error');
-							return;
-						}
-						break;
-					}
-					case 4: {
 						$('input.staff').prop('checked', false);
 						$('.staff.choosen').each(function(i, v) {
 							var id = $(v).data('id');
 							$('input[name="staff[]"][type="checkbox"][value=' + id + ']').prop('checked', true);
 						});
+						break;
+					}
+					case 4: {
+						if (!$("#start_at").val() && st > step) {
+							swal('Mời chọn thời gian!', '', 'error');
+							return;
+						}
 						break;
 					}
 					case 5: {
@@ -823,15 +840,6 @@
 						break;
 					}
 					case 4: {
-						var startAt = $('#start_at').val();
-						if (startAt) {
-							var date = moment(startAt).format("DD/MM/YYYY");
-							var time = moment(startAt).format("HH:mm");
-							$('.display-start-at').html(time + ' - ' + date);
-						}
-						break;
-					}
-					case 5: {
 						var services = [];
 						var staffs = [];
 						$('input[name="service[]"][type="checkbox"]:checked').each(function(i, v) {
@@ -865,6 +873,15 @@
 						});
 						$('.confirm-list').html(confirmListHtml);
 					}
+					case 5: {
+						var startAt = $('#start_at').val();
+						if (startAt) {
+							var date = moment(startAt).format("DD/MM/YYYY");
+							var time = moment(startAt).format("HH:mm");
+							$('.display-start-at').html(time + ' - ' + date);
+						}
+						break;
+					}
 				}
 			}
 			$('.next-step').on('click', function() {
@@ -887,6 +904,13 @@
 				}
 			});
 			$('.staff').on('click', function() {
+				if ($(this).hasClass('choosen')) {
+					$(this).removeClass('choosen');
+				} else {
+					$(this).addClass('choosen');
+				}
+			});
+			$('.extraservice').on('click', function() {
 				if ($(this).hasClass('choosen')) {
 					$(this).removeClass('choosen');
 				} else {

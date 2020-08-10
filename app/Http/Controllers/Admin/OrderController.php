@@ -48,7 +48,25 @@ class OrderController extends Controller
                ->editColumn('phone_customer', function ($order) {
                     return  $order->customer->phone;
                 })
-               ->editColumn('note', function ($order) {
+                //    ->editColumn('note', function ($order) {
+                //         if ($order->note == null||$order->note=='[]') {
+                //             return 'Không có dịch vụ thêm!';
+                //         } else {
+                //             $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
+                //             $extraServiceChoosen='';
+                //             $extraServiceIDs=json_decode($order->note, TRUE);
+                //             foreach ($extraServiceIDs as $serviceId) {
+                //                 foreach ($extraservices as $service) {
+                //                     if($service['id']===$serviceId){
+                //                         $extraServiceChoosen+=$extraServiceChoosen==''?($service->name):(', '+($service->name));
+                //                     }
+                //                 }
+                //             }
+    
+                //             return $extraServiceChoosen;
+                //         }
+                //     })
+                ->editColumn('note', function ($order) {
                     if ($order->note == null) {
                         return 'Không có ghi chú!';
                     } else {

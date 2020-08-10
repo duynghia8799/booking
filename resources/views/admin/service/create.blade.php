@@ -119,7 +119,7 @@
                                             *
                                         </span>
                                     </label>
-                                    <input class="form-control m-input" id="priority" name="priority" placeholder="Nhập số" type="text" value="{{ old('priority') }}">
+                                    <input class="form-control m-input" id="priority" name="priority" placeholder="Nhập số" type="text" value="0">
                                     </input>
                                     @if ($errors->has('priority'))
                                         <p class="text-danger">

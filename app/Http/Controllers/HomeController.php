@@ -114,7 +114,7 @@ class HomeController extends Controller
             'service'  => $services,
             'note'     => $request->note,
         ];
-        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
+        // \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back()->with('<script>window.close();</script>');
     }
