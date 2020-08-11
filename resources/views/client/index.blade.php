@@ -246,6 +246,13 @@
 			height: auto;
 			padding: 20px 0px;
 		}
+
+		.customer-name {
+			font-weight: 700;
+		}
+		.number-partner{
+			font-size: 12px;
+		}
 	</style>
 </head>
 
@@ -271,14 +278,7 @@
 								<div class="row">
 									<div class="col-12 col-md-8 offset-md-2">
 										<div class="form-group">
-											<input type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-12 col-md-8 offset-md-2">
-										<div class="form-group">
-											<input type="text" class="form-control" id="data-code" name="data-code" placeholder="Giành cho xem lịch sử">
+											<input value="0974081997" type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX">
 										</div>
 									</div>
 								</div>
@@ -297,18 +297,30 @@
 							<div class="step-wrapper">
 								<div class="row">
 									<div class="col-6 col-md-5 offset-md-1">
-										<label for="fullname">HỌ TÊN</label>
+										<label style="margin-left: 15px;" for="fullname">HỌ TÊN</label>
 									</div>
 									<div class="col-6 col-md-5">
-										<label for="partner">SỐ NGƯỜI</label>
+										<label style="margin-left: 15px;" for="partner">SỐ NGƯỜI</label>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-6 col-md-5 offset-md-1">
-										<input type="text" class="form-control" id="data-fullname" name="data-fullname" placeholder="Họ và tên">
+										<input value="nvm" type="text" class="form-control" id="data-fullname" name="data-fullname" placeholder="Họ và tên">
 									</div>
 									<div class="col-6 col-md-5">
-										<input type="text" class="form-control" id="data-partner" name="data-partner" placeholder="Nhập số người đi cùng">
+										<select class="form-control" id="data-partner" name="data-partner">
+											<option value="1"> 1 </option>
+											<option value="2"> 2 </option>
+											<option value="3"> 3 </option>
+											<option value="4"> 4 </option>
+											<option value="5"> 5 </option>
+											<option value="6"> 6 </option>
+											<option value="7"> 7 </option>
+											<option value="8"> 8 </option>
+											<option value="9"> 9 </option>
+											<option value="10"> 10 </option>
+											<option value=""> trên 10 người </option>
+										</select>
 									</div>
 								</div>
 							</div>
@@ -399,7 +411,7 @@
 								<div class="text-center step-title m-0 m-t-3">
 									<div class="customer-name"></div>
 									<div class="customer-phone"></div>
-									<div><small class="number-partner"></small></div>
+									<small class="number-partner"></small>
 									<div><small class="display-start-at"></small></div>
 								</div>
 								<div class="white-divide"></div>
@@ -446,13 +458,12 @@
 								<div class="text-center step-title m-0 m-t-3">
 									<div class="customer-name"></div>
 									<div class="customer-phone"></div>
-									<div><small class="number-partner"></small></div>
+									<small class="number-partner"></small>
 								</div>
 								<div class="white-divide"></div>
 								<div class="text-center step-title m-0 m-t-3">
 									CHỌN THỜI GIAN
 								</div>
-
 								<div class="row">
 									<div class="col-12 col-md-8 offset-md-2">
 										<div class="d-flex text-center">
@@ -485,14 +496,12 @@
 								</div>
 								<div class="text-center m-0" style="font-size: 20px;">
 									<div class="customer-name"></div>
-									<div class="customer-phone"></div>
-									<div><small class="number-partner"></small></div>
-									<div><small class="display-start-at"></small></div>
+									<div class="customer-phone" style="font-size: 16px;"></div>
+									<!-- <div><small class="number-partner"></small></div>
+									<div><small class="display-start-at"></small></div> -->
 								</div>
 								<div class="row">
-									<div class="text-ts col-12 col-md-8 offset-md-2">
-										<div class="btn-styled bg-white text-ts p-3 confirm-list">
-										</div>
+									<div class="text-ts col-12 col-md-8 offset-md-2 confirm-list">
 									</div>
 								</div>
 								<div class="row">
@@ -638,49 +647,7 @@
 				}
 				var data = {};
 				data['phone_history'] = phone;
-				data['data-code'] = $('#data-code').val();
-				$.ajax({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					},
-					url: '/json-history',
-					type: 'POST',
-					data: JSON.stringify(data),
-					contentType: 'application/json',
-					success: function(result) {
-						if (!result.key) {
-							swal(result.value, '', 'error');
-						}
-						if (result.key) {
-							if (result.value.length === 0) {
-								swal('Lịch sử đặt lịch của bạn đang trống!', '', 'error');
-								return;
-							}
-							var orders = result.value;
-							$.each(orders, function(i, order) {
-								var orderDetails = [];
-								for (var i; i < order.detailServices.length; i++) {
-									var orderDetail = {};
-									orderDetail.serviceID = order.detailServices[i];
-									orderDetail.staffID = order.detailStaffs[i] ? order.detailStaffs[i] : null;
-									orderDetails.push(orderDetail);
-								}
-								order.orderDetails = orderDetails;
-							});
-							historyOrder = orders;
-							$('.history-customer-name').html(orders[0].customer.name);
-							$('.history-customer-phone').html(orders[0].customer.phone);
-							var historyListHtml = buildHistoryListHtml(orders);
-							$('#history-list').html(historyListHtml);
-							$('#history-section').removeClass('d-none');
-							$('.order-section').addClass('d-none');
-						}
-					},
-					error: function(err) {
-						swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!', '', 'error');
-					}
-				});
-
+				loadHistoryOrder(data);
 			});
 			$('#btn-pick-date').datepicker("setDate", new Date())
 				.on('changeDate', function(ev) {
@@ -730,7 +697,8 @@
 				var order = historyOrder.find(item => item.id === orderId);
 				$('#data-phone').val(order.customer.phone);
 				$('#data-fullname').val(order.customer.name);
-				$('#data-partner').val(order.number_person);
+				$('#data-partner option:selected').prop('selected', false);
+				$('#data-partner option[value="' + order.number_person + '"]').prop('selected', true);
 				$('.treatment').removeClass('choosen');
 				$('.treatment').each(function(i, v) {
 					var id = $(v).data('id');
@@ -750,7 +718,7 @@
 				changeStep(1);
 				changeStep(2);
 				changeStep(3);
-				// changeStep(4);
+				changeStep(4);
 			});
 		</script>
 		<script>
@@ -777,15 +745,17 @@
 					}
 					case 2: {
 						var fullname = $('#data-fullname').val();
-						var partner = $('#data-partner').val();
+						var partner = $('#data-partner option:selected').val();
 						if (!fullname) {
 							$('#data-fullname').focus();
 							swal('Hãy nhập tên của bạn!', '', 'error');
 							return;
 						}
-						if ($('.treatment.choosen').length < 1) {
-							swal('Mời lừa chọn dịch vụ!', '', 'error');
-							return;
+						if (st === 3) {
+							if ($('.treatment.choosen').length < 1) {
+								swal('Mời lừa chọn dịch vụ!', '', 'error');
+								return;
+							}
 						}
 						$('input.service').prop('checked', false);
 						$('.treatment.choosen').each(function(i, v) {
@@ -839,7 +809,15 @@
 						$('.number-partner').html('(' + partner + ' người)');
 						break;
 					}
-					case 4: {
+					case 4: {}
+					case 5: {
+						var startAt = $('#start_at').val();
+						if (startAt) {
+							var date = moment(startAt).format("DD/MM/YYYY");
+							var time = moment(startAt).format("HH:mm");
+							$('.display-start-at').html(time + ' - ' + date);
+						}
+
 						var services = [];
 						var staffs = [];
 						$('input[name="service[]"][type="checkbox"]:checked').each(function(i, v) {
@@ -855,31 +833,15 @@
 							staff.name = $(v).data('name');
 							staffs.push(staff);
 						});
-
-
-						var confirmList = [];
-						for (var i = 0; i < services.length; i++) {
-							var item = {};
-							item.serviceID = services[i];
-							item.staffID = typeof staffs[i] === "undefined" ? null : staffs[i];
-							confirmList.push(item);
-						}
-						var confirmListHtml = '';
-						$.each(confirmList, function(i, v) {
-							confirmListHtml += '<div class="clearfix ' + ((confirmList.length !== i + 1) ? 'border-bottom-ts ' : '') + 'mb-1 p-2 confirm-item">' +
-								'<div class="pull-left">' + v.serviceID.name + '</div>' +
-								'<div class="pull-right"><small>' + (!v.staffID ? '' : v.staffID.name) + '</small></div>' +
-								'</div>';
-						});
+						var order = {};
+						order.number_person = $('#partner').val();
+						order.detailServices = services;
+						order.detailStaffs = staffs;
+						order.start_at = $('#start_at').val();
+						var orders = [];
+						orders.push(order);
+						var confirmListHtml = buildHistoryListHtml(orders);
 						$('.confirm-list').html(confirmListHtml);
-					}
-					case 5: {
-						var startAt = $('#start_at').val();
-						if (startAt) {
-							var date = moment(startAt).format("DD/MM/YYYY");
-							var time = moment(startAt).format("HH:mm");
-							$('.display-start-at').html(time + ' - ' + date);
-						}
 						break;
 					}
 				}
@@ -897,16 +859,26 @@
 				}, 1000);
 			});
 			$('.treatment').on('click', function() {
+				var numberPerson = $('#data-partner option:selected').val();
+				var numberChoosen = $('.treatment.choosen').length;
 				if ($(this).hasClass('choosen')) {
 					$(this).removeClass('choosen');
 				} else {
+					if (numberChoosen == numberPerson) {
+						return;
+					}
 					$(this).addClass('choosen');
 				}
 			});
 			$('.staff').on('click', function() {
+				var numberPerson = $('#data-partner option:selected').val();
+				var numberChoosen = $('.staff.choosen').length;
 				if ($(this).hasClass('choosen')) {
 					$(this).removeClass('choosen');
 				} else {
+					if (numberChoosen == numberPerson) {
+						return;
+					}
 					$(this).addClass('choosen');
 				}
 			});
@@ -933,41 +905,99 @@
 			@endif
 		</script>
 		<script>
-			function buildHistoryListHtml(orders) {
+			function buildHistoryListHtml(orders, hasReOrder) {
 				var html = '';
+				var btnReOrderHtml = '<div class="clearfix"><a class="btn-styled text-white bg-black pull-right m-0 mt-1 pt-1 pb-1 re-order" href="javascript:void(0)">ĐẶT LẠI</a></div>';
 				$.each(orders, function(i, order) {
 					var historyTime = moment(order.start_at).format("HH:mm");
 					var historyDate = moment(order.start_at).format("DD/MM/YYYY");
 					html += '<div class="btn-styled bg-white text-ts p-3 history-item" data-orderid="' + order.id + '">' +
-						'<div class="clearfix mb-1 p-2 border-bottom-ts">' +
+						'<div class="list-detail">' +
+						buildItemService(order) +
+						'</div>' +
+						'<div class="clearfix mb-1 p-2 border-bottom-ts border-top-ts" style="font-size: 400;">' +
 						'<div class="pull-left history-time">Hẹn: ' + historyTime + '</div>' +
 						'<div class="pull-right history-date">' + historyDate + '</div>' +
 						'</div>' +
 						'<div class="list-detail">' +
-						buildOrderHtmlItem(order.orderDetails) +
+						buildItemStaff(order) +
 						'</div>' +
-						'<div class="clearfix">' +
-						'<a class="btn-styled text-white bg-black pull-right m-0 mt-1 pt-1 pb-1 re-order" href="javascript:void(0)">ĐẶT LẠI</a>' +
-						'</div>' +
+						(hasReOrder ? btnReOrderHtml : '') +
 						'</div>';
 				});
 				return html;
 			}
 
-			function buildOrderHtmlItem(orderDetails) {
-				var htmlDetail = '';
-				$.each(orderDetails, function(i, orderDetail) {
-					htmlDetail += '<div class="clearfix p-2 dotted-border-bottom-ts">' +
-						'<div class="pull-left">' + orderDetail.serviceID.name + '</div>' +
-						'<div class="pull-right"><small>' + (orderDetail.staffID ? orderDetail.staffID.name : '') + '</small></div>' +
+			function buildItemService(order) {
+				var orderDetails = order.detailServices;
+				var html = '';
+				var psHtml = '<div class="pull-right text-muted" style="font-weight: 400 !important; font-size:12px;"><b>' + order.number_person + ' người</b></div>';
+				$.each(orderDetails, function(i, v) {
+					html += '<div class="clearfix p-2 ' + (i + 1 === orderDetails.length ? 'border-bottom-ts' : 'dotted-border-bottom-ts') + '">' +
+						'<div class="pull-left"><b>' + v.name + '</b></div>' +
+						(i + 1 === orderDetails.length ? psHtml : '') +
 						'</div>';
 				});
-				return htmlDetail;
+				return html;
+			}
+
+			function buildItemStaff(order) {
+				var orderDetails = order.detailStaffs;
+				var html = '';
+				$.each(orderDetails, function(i, v) {
+					html += '<div class="clearfix p-2 ' + (i + 1 === orderDetails.length ? '' : 'dotted-border-bottom-ts') + '">' +
+						(i === 0 ? '<div class="pull-left"><small>KỸ THUẬT VIÊN</small></div>' : '') +
+						'<div class="pull-right"><b>' + v.name + '</b></div>' +
+						'</div>'
+				});
+				return html;
 			}
 			$('.close-tab').on('click', function() {
 				window.close('', '_self');
 				window.close();
 			});
+		</script>
+		<script>
+			function loadHistoryOrder(data) {
+				$.ajax({
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					},
+					url: '/public/json-history',
+					type: 'POST',
+					data: JSON.stringify(data),
+					contentType: 'application/json',
+					success: function(result) {
+						if (!result.key) {
+							swal(result.value, '', 'error');
+						}
+						if (result.key) {
+							if (!result.value) {
+								var code = prompt('Mời nhập mã để xem lịch sử');
+								data['code_history'] = code;
+								if(code){
+									loadHistoryOrder(data);
+								}
+								return;
+							}else if (result.value.length === 0) {
+								swal('Lịch sử đặt lịch của bạn đang trống!', '', 'error');
+								return;
+							}
+							var orders = result.value;
+							historyOrder = orders;
+							$('.history-customer-name').html(orders[0].customer.name);
+							$('.history-customer-phone').html(orders[0].customer.phone);
+							var historyListHtml = buildHistoryListHtml(orders, true);
+							$('#history-list').html(historyListHtml);
+							$('#history-section').removeClass('d-none');
+							$('.order-section').addClass('d-none');
+						}
+					},
+					error: function(err) {
+						swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!', '', 'error');
+					}
+				});
+			}
 		</script>
 	</div>
 </body>

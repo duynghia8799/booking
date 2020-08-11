@@ -27,7 +27,7 @@ class HomeController extends Controller
         $services = Service::where('status', config('common.status.active'))->where('isTreatment', 0)->orderBy('priority')->get();
         // Lấy dịch vụ thêm
         $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
-        return view('client.index', compact(['staffs','inforWeb', 'services', 'extraservices']));
+        return view('client.index', compact(['staffs', 'inforWeb', 'services', 'extraservices']));
     }
 
     public function redirect()
@@ -248,22 +248,22 @@ class HomeController extends Controller
     }
     public function jsonHistory(Request $request)
     {
-        if ($request->phone_history == null && $request->code_history == null) {
+        if ($request->phone_history == null) {
             $result = [
                 'key'   => 0,
-                'value' => 'Không tồn tại thông tin!'
+                'value' => 'Không khả dụng!'
             ];
             return response()->json($result);
-        } else if ($request->phone_history != null || $request->code_history != null) {
+        } else {
             $check_cutomer = Customer::where('phone', $request->phone_history)->first();
             if ($check_cutomer == null) {
                 $result = [
                     'key'   => 0,
-                    'value' => 'Không tồn tại thông tin!'
+                    'value' => 'Không có dữ liệu với số điện thoại này!'
                 ];
                 return response()->json($result);
             } else {
-                if ($check_cutomer->code === $request->code_history) {
+                if ($check_cutomer->code === null || $check_cutomer->code === $request->code_history) {
                     $orders = Order::with(['customer', 'order_details'])
                         ->where('customer_id', $check_cutomer->id)
                         ->limit(5)->orderBy('created_at', 'desc')->get();
@@ -275,16 +275,14 @@ class HomeController extends Controller
                         $order_detail = OrderDetail::where('order_id', $order->id)->first();
                         $order_detail = unserialize($order_detail->detail);
                         $order_detail_id = (object) $order_detail;
-                        $order['staffIDs'] = $order_detail_id->staff_id;
-                        $order['serviceIDs'] = $order_detail_id->service_id;
                         $order['detailStaffs'] = Staff::whereIn('id', (array)$order_detail_id->staff_id)->get();
                         $order['detailServices'] = Service::whereIn('id', (array)$order_detail_id->service_id)->get();
                     }
                     return response()->json($result);
                 } else {
                     $result = [
-                        'key'   => 0,
-                        'value' => 'Không tồn tại thông tin!'
+                        'key'   => 1,
+                        'value' => null
                     ];
                     return response()->json($result);
                 }
