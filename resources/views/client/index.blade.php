@@ -278,7 +278,7 @@
 								<div class="row">
 									<div class="col-12 col-md-8 offset-md-2">
 										<div class="form-group">
-											<input value="0974081997" type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX">
+											<input type="text" class="form-control" id="data-phone" name="data-phone" placeholder="VD: 0985 XXX XXX">
 										</div>
 									</div>
 								</div>
@@ -305,7 +305,7 @@
 								</div>
 								<div class="row">
 									<div class="col-6 col-md-5 offset-md-1">
-										<input value="nvm" type="text" class="form-control" id="data-fullname" name="data-fullname" placeholder="Họ và tên">
+										<input type="text" class="form-control" id="data-fullname" name="data-fullname" placeholder="Họ và tên">
 									</div>
 									<div class="col-6 col-md-5">
 										<select class="form-control" id="data-partner" name="data-partner">
@@ -963,7 +963,7 @@
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: '/public/json-history',
+					url: '/json-history',
 					type: 'POST',
 					data: JSON.stringify(data),
 					contentType: 'application/json',

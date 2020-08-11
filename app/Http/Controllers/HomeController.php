@@ -106,15 +106,22 @@ class HomeController extends Controller
         foreach ($request->service as $value) {
             $services[] = Service::where('id', $value)->first();
         }
+        foreach (json_decode($request->note) as $value) {
+            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+        }
+        for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
+            $choose[] = $extraServiceChoosen[$i]->description .'';
+        }
+        
         $dataSendMail = [
             'fullname' => $request->fullname,
             'phone'    => $request->phone,
             'start_at' => $request->start_at,
             'staff'    => $staffs,
             'service'  => $services,
-            'note'     => $request->note,
+            'note'     => $choose,
         ];
-        // \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
+        \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
         $request->session()->flash('success', 'Đặt lịch thành công!');
         return redirect()->back()->with('<script>window.close();</script>');
     }
@@ -212,15 +219,21 @@ class HomeController extends Controller
             foreach ($request->service as $value) {
                 $services[] = Service::where('id', $value)->first();
             }
+            foreach (json_decode($request->note) as $value) {
+                $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+            }
+            for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
+                $choose[] = $extraServiceChoosen[$i]->description .'';
+            }
             $dataSendMail = [
                 'fullname' => $order->customer->name,
                 'phone'    => $order->customer->phone,
                 'start_at' => $request->start_at,
                 'staff'    => $staffs,
                 'service'  => $services,
-                'note'     => $request->note,
+                'note'     => $choose,
             ];
-            // \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
+            \Mail::to($setting->email)->send(new \App\Mail\SendMail($dataSendMail));
             /*
              *   Insert to table Order
              */

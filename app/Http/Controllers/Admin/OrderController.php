@@ -34,7 +34,7 @@ class OrderController extends Controller
                 $orders = Order::with('customer')->get();
             }
             return Datatables::of($orders)
-               ->editColumn('name_customer', function ($order) {
+                ->editColumn('name_customer', function ($order) {
                     return '<span class="text-success" style="text-transform: uppercase;">
                                 '.$order->customer->name.'
                             </span>';
@@ -42,37 +42,34 @@ class OrderController extends Controller
                ->editColumn('phone_customer', function ($order) {
                     return  $order->customer->phone;
                 })
-               ->editColumn('start_at', function ($order) {
+                ->editColumn('start_at', function ($order) {
                     return  'Ngày '.date('d/m/Y', strtotime($order->start_at)). ' vào lúc ' .date('H:i:s', strtotime($order->start_at));
                 })
-               ->editColumn('phone_customer', function ($order) {
+                ->editColumn('phone_customer', function ($order) {
                     return  $order->customer->phone;
                 })
-                //    ->editColumn('note', function ($order) {
-                //         if ($order->note == null||$order->note=='[]') {
-                //             return 'Không có dịch vụ thêm!';
-                //         } else {
-                //             $extraservices = Service::where('status', config('common.status.active'))->where('isTreatment', 1)->orderBy('priority')->get();
-                //             $extraServiceChoosen='';
-                //             $extraServiceIDs=json_decode($order->note, TRUE);
-                //             foreach ($extraServiceIDs as $serviceId) {
-                //                 foreach ($extraservices as $service) {
-                //                     if($service['id']===$serviceId){
-                //                         $extraServiceChoosen+=$extraServiceChoosen==''?($service->name):(', '+($service->name));
-                //                     }
-                //                 }
-                //             }
-    
-                //             return $extraServiceChoosen;
-                //         }
-                //     })
                 ->editColumn('note', function ($order) {
-                    if ($order->note == null) {
-                        return 'Không có ghi chú!';
+                    if ($order->note == null||$order->note=='[]') {
+                        return 'Không có dịch vụ thêm!';
                     } else {
-                        return $order->note;
+                        $extraServiceIDs = json_decode($order->note, TRUE);
+                        foreach ($extraServiceIDs as $value) {
+                            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+                        }
+                        for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
+                            $choose[] = $extraServiceChoosen[$i]->name . '';
+                        }
+                        // dd($choose);
+                        return $choose;
                     }
                 })
+                // ->editColumn('note', function ($order) {
+                //     if ($order->note == null) {
+                //         return 'Không có ghi chú!';
+                //     } else {
+                //         return $order->note;
+                //     }
+                // })
                ->editColumn('status', function ($order) {
                     if ($order->status == config('common.status.active')) {
                         return '<span class="text-success">Đã xác nhận</span>';
@@ -132,6 +129,12 @@ class OrderController extends Controller
                 $services[] = Service::where('id',$value)->first();
             }
         }
-        return view('admin.order.detail',compact(['orders','staffs','services']));
+        foreach (json_decode($orders->note) as $value) {
+            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+        }
+        for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
+            $choose[] = $extraServiceChoosen[$i]->name .'';
+        }
+        return view('admin.order.detail',compact(['orders','staffs','services','choose']));
     }
 }

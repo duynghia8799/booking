@@ -88,11 +88,13 @@
                 </tr>
                 <tr>
                     <td>
-                        Ghi chú
+                        Ghi chú dịch vụ thêm
                     </td>
                     <td>
                     	<b>
-                        	{{$dataSendMail['note']}}
+                            @foreach($dataSendMail['note'] as $value)
+                                {{$value}} <br>
+                            @endforeach 
                         </b>
                     </td>
                 </tr>

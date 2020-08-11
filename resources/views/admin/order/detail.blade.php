@@ -77,12 +77,14 @@
                                             <span class="m-invoice__text">{{$orders->customer->phone}}</span>
                                         </div>
                                         <div class="m-invoice__item">
-                                            <span class="m-invoice__subtitle">GHI CHÚ</span>
+                                            <span class="m-invoice__subtitle">GHI CHÚ DỊCH VỤ THÊM</span>
                                             <span class="m-invoice__text">
                                                 @if ($orders->note == null)
                                                     Không có ghi chú!
                                                 @else
-                                                    {{$orders->note}}
+                                                    @foreach($choose as $value)
+                                                        {{$value}} <br>
+                                                    @endforeach 
                                                 @endif
                                             </span>
                                         </div>
