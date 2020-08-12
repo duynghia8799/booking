@@ -107,12 +107,12 @@ class HomeController extends Controller
             $services[] = Service::where('id', $value)->first();
         }
         foreach (json_decode($request->note) as $value) {
-            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
         }
-        for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
-            $choose[] = $extraServiceChoosen[$i]->description .'';
+        for ($i = 0; $i < count($extraServiceChoosen); $i++) {
+            $choose[] = $extraServiceChoosen[$i]->description . '';
         }
-        
+
         $dataSendMail = [
             'fullname' => $request->fullname,
             'phone'    => $request->phone,
@@ -220,10 +220,10 @@ class HomeController extends Controller
                 $services[] = Service::where('id', $value)->first();
             }
             foreach (json_decode($request->note) as $value) {
-                $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+                $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
             }
-            for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
-                $choose[] = $extraServiceChoosen[$i]->description .'';
+            for ($i = 0; $i < count($extraServiceChoosen); $i++) {
+                $choose[] = $extraServiceChoosen[$i]->description . '';
             }
             $dataSendMail = [
                 'fullname' => $order->customer->name,
@@ -288,6 +288,8 @@ class HomeController extends Controller
                         $order_detail = OrderDetail::where('order_id', $order->id)->first();
                         $order_detail = unserialize($order_detail->detail);
                         $order_detail_id = (object) $order_detail;
+                        $order['staffIDs'] = (array)$order_detail_id->staff_id;
+                        $order['serviceIDs'] = (array)$order_detail_id->service_id;
                         $order['detailStaffs'] = Staff::whereIn('id', (array)$order_detail_id->staff_id)->get();
                         $order['detailServices'] = Service::whereIn('id', (array)$order_detail_id->service_id)->get();
                     }
@@ -295,7 +297,7 @@ class HomeController extends Controller
                 } else {
                     $result = [
                         'key'   => 1,
-                        'value' => null
+                        'value' => 'Mã của bạn vừa nhập không chính xác, mời thử lại!'
                     ];
                     return response()->json($result);
                 }

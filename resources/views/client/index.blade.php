@@ -101,7 +101,6 @@
 		}
 
 		.step-title {
-			font-size: 20px;
 			margin-top: 20px !important;
 		}
 
@@ -249,8 +248,14 @@
 
 		.customer-name {
 			font-weight: 700;
+			font-size: 22px;
 		}
-		.number-partner{
+
+		.customer-phone {
+			font-size: 16px;
+		}
+
+		.number-partner {
 			font-size: 12px;
 		}
 	</style>
@@ -286,7 +291,7 @@
 									<div class="col-12 col-md-8 offset-md-2">
 										<div class="d-flex text-center">
 											<a class="flex-fill btn-styled btn-action-step-1 next-step" href="javascript:void(0)">ĐẶT LỊCH MỚI</a>
-											<a class="flex-fill btn-styled btn-action-step-1 view-history" href="javascript:void(0)">LỊCH ĐÃ ĐẶT</a>
+											<a class="flex-fill btn-styled btn-action-step-1 view-history" disabled href="javascript:void(0)">LỊCH ĐÃ ĐẶT</a>
 										</div>
 									</div>
 								</div>
@@ -472,7 +477,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="text-center text-white display-picked-time"></div>
+								<div class="text-center text-white display-picked-time">Mời chọn thời gian</div>
 								<div class="action-direct-step">
 									<div class="float-left">
 										<b style="font-size: 18px; font-weight: 900;">&lt;&lt;</b>
@@ -635,7 +640,9 @@
 			$('.btn-confirm-order').on('click', function() {
 				$('#form-booking').submit();
 			});
-			$('.view-history').on('click', function() {
+			$('.view-history').on('click', viewHistory);
+
+			function viewHistory() {
 				var phone = $('#data-phone').val();
 				phone = phone.replace(/ /g, '');
 				if (/^\d{3}-?\d{3}-?\d{4}$/g.test(phone)) {
@@ -648,7 +655,7 @@
 				var data = {};
 				data['phone_history'] = phone;
 				loadHistoryOrder(data);
-			});
+			}
 			$('#btn-pick-date').datepicker("setDate", new Date())
 				.on('changeDate', function(ev) {
 					$('#btn-pick-date').datepicker('hide');
@@ -713,6 +720,17 @@
 						$(v).addClass('choosen');
 					}
 				});
+				$('.extraservice').removeClass('choosen');
+				var extraServiceSelected = JSON.parse(order.note);
+				$.each(extraServiceSelected, function(i, val) {
+					$('.extraservice').each(function(i, v) {
+						let id = $(v).data('id');
+						if (val === id) {
+							$(v).addClass('choosen');
+						}
+					});
+				});
+				$(order.naote)
 				$('.order-section').removeClass('d-none');
 				$('#history-section').addClass('d-none');
 				changeStep(1);
@@ -963,23 +981,31 @@
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: '/json-history',
+					url: '/public/json-history',
 					type: 'POST',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
+					beforeSend: function(xhr) {
+						$('.view-history').unbind();
+					},
 					success: function(result) {
 						if (!result.key) {
 							swal(result.value, '', 'error');
 						}
 						if (result.key) {
-							if (!result.value) {
-								var code = prompt('Mời nhập mã để xem lịch sử');
-								data['code_history'] = code;
-								if(code){
-									loadHistoryOrder(data);
-								}
+							if ((typeof result.value === 'string')) {
+								swal({
+									title: 'Mời nhập mã để xem lịch sử',
+									input: 'text'
+								}).then((val) => {
+									if (val.value) {
+										data['code_history'] = val.value;
+										loadHistoryOrder(data);
+									}
+								});
+
 								return;
-							}else if (result.value.length === 0) {
+							} else if (result.value.length === 0) {
 								swal('Lịch sử đặt lịch của bạn đang trống!', '', 'error');
 								return;
 							}
@@ -996,6 +1022,8 @@
 					error: function(err) {
 						swal('Đã có lỗi xảy ra! Xin hãy thử lại sau!', '', 'error');
 					}
+				}).done(function(data) {
+					$('.view-history').on('click', viewHistory);
 				});
 			}
 		</script>
