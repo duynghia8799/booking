@@ -981,7 +981,7 @@
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					},
-					url: '/public/json-history',
+					url: '/json-history',
 					type: 'POST',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
