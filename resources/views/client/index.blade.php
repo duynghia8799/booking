@@ -882,7 +882,7 @@
 				if ($(this).hasClass('choosen')) {
 					$(this).removeClass('choosen');
 				} else {
-					if (numberChoosen == numberPerson) {
+					if (numberPerson && numberChoosen == numberPerson) {
 						return;
 					}
 					$(this).addClass('choosen');
@@ -894,11 +894,16 @@
 				if ($(this).hasClass('choosen')) {
 					$(this).removeClass('choosen');
 				} else {
-					if (numberChoosen == numberPerson) {
+					if (numberPerson && numberChoosen == numberPerson) {
 						return;
 					}
 					$(this).addClass('choosen');
 				}
+			});
+			$('#data-partner').on('change', function() {
+				$('.treatment').removeClass('choosen');
+				$('.staff').removeClass('choosen');
+				$('.extraservice').removeClass('choosen');
 			});
 			$('.extraservice').on('click', function() {
 				if ($(this).hasClass('choosen')) {
