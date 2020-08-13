@@ -791,7 +791,10 @@
 							let id = $(v).data('id');
 							extraservice.push(id);
 						});
-						$('#note').val(JSON.stringify(extraservice));
+						if (extraservice.length > 0) {
+							$('#note').val(JSON.stringify(extraservice));
+						}
+						$('#note').val();
 						$('#fullname').val(fullname);
 						$('#partner').val(partner);
 						break;
@@ -957,7 +960,7 @@
 			function buildItemService(order) {
 				var orderDetails = order.detailServices;
 				var html = '';
-				var psHtml = '<div class="pull-right text-muted" style="font-weight: 400 !important; font-size:12px;"><b>' + (order.number_person?order.number_person:'trên 10') + ' người</b></div>';
+				var psHtml = '<div class="pull-right text-muted" style="font-weight: 400 !important; font-size:12px;"><b>' + (order.number_person ? order.number_person : 'trên 10') + ' người</b></div>';
 				$.each(orderDetails, function(i, v) {
 					html += '<div class="clearfix p-2 ' + (i + 1 === orderDetails.length ? 'border-bottom-ts' : 'dotted-border-bottom-ts') + '">' +
 						'<div class="pull-left"><b>' + v.name + '</b></div>' +
