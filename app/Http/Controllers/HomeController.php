@@ -110,7 +110,7 @@ class HomeController extends Controller
             $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
         }
         for ($i = 0; $i < count($extraServiceChoosen); $i++) {
-            $choose[] = $extraServiceChoosen[$i]->description . '';
+            $choose[] = $extraServiceChoosen[$i]->name . '';
         }
 
         $dataSendMail = [
@@ -223,7 +223,7 @@ class HomeController extends Controller
                 $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
             }
             for ($i = 0; $i < count($extraServiceChoosen); $i++) {
-                $choose[] = $extraServiceChoosen[$i]->description . '';
+                $choose[] = $extraServiceChoosen[$i]->name . '';
             }
             $dataSendMail = [
                 'fullname' => $order->customer->name,
