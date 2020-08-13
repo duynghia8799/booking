@@ -246,12 +246,14 @@
 			padding: 20px 0px;
 		}
 
-		.customer-name {
+		.customer-name,
+		.history-customer-name {
 			font-weight: 700;
 			font-size: 22px;
 		}
 
-		.customer-phone {
+		.customer-phone,
+		.history-customer-phone {
 			font-size: 16px;
 		}
 
@@ -704,8 +706,12 @@
 				var order = historyOrder.find(item => item.id === orderId);
 				$('#data-phone').val(order.customer.phone);
 				$('#data-fullname').val(order.customer.name);
-				$('#data-partner option:selected').prop('selected', false);
-				$('#data-partner option[value="' + order.number_person + '"]').prop('selected', true);
+				if (order.number_person) {
+					$('#data-partner option:selected').prop('selected', false);
+					$('#data-partner option[value="' + order.number_person + '"]').prop('selected', true);
+				} else {
+					$('#data-partner option[value=""]').prop('selected', true);
+				}
 				$('.treatment').removeClass('choosen');
 				$('.treatment').each(function(i, v) {
 					var id = $(v).data('id');
@@ -786,9 +792,6 @@
 							extraservice.push(id);
 						});
 						$('#note').val(JSON.stringify(extraservice));
-						if (!partner) {
-							partner = 1;
-						}
 						$('#fullname').val(fullname);
 						$('#partner').val(partner);
 						break;
@@ -954,7 +957,7 @@
 			function buildItemService(order) {
 				var orderDetails = order.detailServices;
 				var html = '';
-				var psHtml = '<div class="pull-right text-muted" style="font-weight: 400 !important; font-size:12px;"><b>' + order.number_person + ' người</b></div>';
+				var psHtml = '<div class="pull-right text-muted" style="font-weight: 400 !important; font-size:12px;"><b>' + (order.number_person?order.number_person:'trên 10') + ' người</b></div>';
 				$.each(orderDetails, function(i, v) {
 					html += '<div class="clearfix p-2 ' + (i + 1 === orderDetails.length ? 'border-bottom-ts' : 'dotted-border-bottom-ts') + '">' +
 						'<div class="pull-left"><b>' + v.name + '</b></div>' +
