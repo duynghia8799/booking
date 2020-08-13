@@ -129,12 +129,18 @@ class OrderController extends Controller
                 $services[] = Service::where('id',$value)->first();
             }
         }
-        foreach (json_decode($orders->note) as $value) {
-            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+
+        if ($orders->note != null) {
+            foreach (json_decode($orders->note) as $value) {
+                $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id',$value)->first();
+            }
+            for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
+                $choose[] = $extraServiceChoosen[$i]->name .'';
+            }
+        } else {
+            $choose = null;
         }
-        for ($i = 0 ; $i < count($extraServiceChoosen); $i++ ) {
-            $choose[] = $extraServiceChoosen[$i]->name .'';
-        }
+
         return view('admin.order.detail',compact(['orders','staffs','services','choose']));
     }
 }

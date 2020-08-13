@@ -106,11 +106,16 @@ class HomeController extends Controller
         foreach ($request->service as $value) {
             $services[] = Service::where('id', $value)->first();
         }
-        foreach (json_decode($request->note) as $value) {
-            $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
-        }
-        for ($i = 0; $i < count($extraServiceChoosen); $i++) {
-            $choose[] = $extraServiceChoosen[$i]->name . '';
+
+        if ($request->note != null) {
+            foreach (json_decode($request->note) as $value) {
+                $extraServiceChoosen[] = Service::where('status', config('common.status.active'))->where('id', $value)->first();
+            }
+            for ($i = 0; $i < count($extraServiceChoosen); $i++) {
+                $choose[] = $extraServiceChoosen[$i]->name . '';
+            }
+        } else {
+            $choose = null;
         }
 
         $dataSendMail = [

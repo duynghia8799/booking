@@ -109,7 +109,7 @@
                                                 </td>
                                                 <td>
                                                     @if ($orders->number_person == null)
-                                                        0
+                                                        Trên 10 người
                                                     @else
                                                         {{$orders->number_person}}
                                                     @endif

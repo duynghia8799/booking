@@ -91,10 +91,13 @@
                         Ghi chú dịch vụ thêm
                     </td>
                     <td>
-                    	<b>
-                            @foreach($dataSendMail['note'] as $value)
-                                {{$value}} <br>
-                            @endforeach 
+                    	<b>@if ($dataSendMail['note'] != null)
+                                @foreach($dataSendMail['note'] as $value)
+                                    {{$value}} <br>
+                                @endforeach
+                            @else
+                                Không có!
+                            @endif
                         </b>
                     </td>
                 </tr>
